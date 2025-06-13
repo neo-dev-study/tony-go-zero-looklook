@@ -2,6 +2,7 @@ package homestay
 
 import (
 	"context"
+
 	"github.com/Masterminds/squirrel"
 
 	"looklook/app/travel/cmd/api/internal/svc"
@@ -29,7 +30,6 @@ func NewBusinessListLogic(ctx context.Context, svcCtx *svc.ServiceContext) Busin
 }
 
 func (l *BusinessListLogic) BusinessList(req types.BusinessListReq) (*types.BusinessListResp, error) {
-
 	whereBuilder := l.svcCtx.HomestayModel.SelectBuilder().Where(squirrel.Eq{"homestay_business_id": req.HomestayBusinessId})
 	list, err := l.svcCtx.HomestayModel.FindPageListByIdDESC(l.ctx, whereBuilder, req.LastId, req.PageSize)
 	if err != nil {

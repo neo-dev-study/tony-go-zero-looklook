@@ -44,8 +44,7 @@ type WXMiniAuthResp struct {
 	RefreshAfter int64  `json:"refreshAfter"`
 }
 
-type UserInfoReq struct {
-}
+type UserInfoReq struct{}
 
 type UserInfoResp struct {
 	UserInfo User `json:"userInfo"`

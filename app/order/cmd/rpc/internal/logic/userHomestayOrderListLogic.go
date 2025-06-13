@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+
 	"github.com/Masterminds/squirrel"
 
 	"looklook/app/order/cmd/rpc/internal/svc"
@@ -29,9 +30,8 @@ func NewUserHomestayOrderListLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *UserHomestayOrderListLogic) UserHomestayOrderList(in *pb.UserHomestayOrderListReq) (*pb.UserHomestayOrderListResp, error) {
-
 	whereBuilder := l.svcCtx.HomestayOrderModel.SelectBuilder().Where(squirrel.Eq{"user_id": in.UserId})
-	//There are supported states in the filter, otherwise return all
+	// There are supported states in the filter, otherwise return all
 	if in.TraderState >= model.HomestayOrderTradeStateCancel && in.TraderState <= model.HomestayOrderTradeStateExpire {
 		whereBuilder = whereBuilder.Where(squirrel.Eq{"trade_state": in.TraderState})
 	}

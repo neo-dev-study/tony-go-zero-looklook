@@ -7,8 +7,9 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
-
 	"time"
+
+	"looklook/pkg/globalkey"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
@@ -17,7 +18,6 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
-	"looklook/pkg/globalkey"
 )
 
 var (
@@ -165,7 +165,6 @@ func (m *defaultHomestayOrderModel) Update(ctx context.Context, session sqlx.Ses
 }
 
 func (m *defaultHomestayOrderModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, newData *HomestayOrder) error {
-
 	oldVersion := newData.Version
 	newData.Version += 1
 
@@ -209,7 +208,6 @@ func (m *defaultHomestayOrderModel) DeleteSoft(ctx context.Context, session sqlx
 }
 
 func (m *defaultHomestayOrderModel) FindSum(ctx context.Context, builder squirrel.SelectBuilder, field string) (float64, error) {
-
 	if len(field) == 0 {
 		return 0, errors.Wrapf(errors.New("FindSum Least One Field"), "FindSum Least One Field")
 	}
@@ -232,7 +230,6 @@ func (m *defaultHomestayOrderModel) FindSum(ctx context.Context, builder squirre
 }
 
 func (m *defaultHomestayOrderModel) FindCount(ctx context.Context, builder squirrel.SelectBuilder, field string) (int64, error) {
-
 	if len(field) == 0 {
 		return 0, errors.Wrapf(errors.New("FindCount Least One Field"), "FindCount Least One Field")
 	}
@@ -255,7 +252,6 @@ func (m *defaultHomestayOrderModel) FindCount(ctx context.Context, builder squir
 }
 
 func (m *defaultHomestayOrderModel) FindAll(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]*HomestayOrder, error) {
-
 	builder = builder.Columns(homestayOrderRows)
 
 	if orderBy == "" {
@@ -280,7 +276,6 @@ func (m *defaultHomestayOrderModel) FindAll(ctx context.Context, builder squirre
 }
 
 func (m *defaultHomestayOrderModel) FindPageListByPage(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*HomestayOrder, error) {
-
 	builder = builder.Columns(homestayOrderRows)
 
 	if orderBy == "" {
@@ -310,7 +305,6 @@ func (m *defaultHomestayOrderModel) FindPageListByPage(ctx context.Context, buil
 }
 
 func (m *defaultHomestayOrderModel) FindPageListByPageWithTotal(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*HomestayOrder, int64, error) {
-
 	total, err := m.FindCount(ctx, builder, "id")
 	if err != nil {
 		return nil, 0, err
@@ -345,7 +339,6 @@ func (m *defaultHomestayOrderModel) FindPageListByPageWithTotal(ctx context.Cont
 }
 
 func (m *defaultHomestayOrderModel) FindPageListByIdDESC(ctx context.Context, builder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*HomestayOrder, error) {
-
 	builder = builder.Columns(homestayOrderRows)
 
 	if preMinId > 0 {
@@ -368,7 +361,6 @@ func (m *defaultHomestayOrderModel) FindPageListByIdDESC(ctx context.Context, bu
 }
 
 func (m *defaultHomestayOrderModel) FindPageListByIdASC(ctx context.Context, builder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*HomestayOrder, error) {
-
 	builder = builder.Columns(homestayOrderRows)
 
 	if preMaxId > 0 {
@@ -391,16 +383,15 @@ func (m *defaultHomestayOrderModel) FindPageListByIdASC(ctx context.Context, bui
 }
 
 func (m *defaultHomestayOrderModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
-
 	return m.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
 		return fn(ctx, session)
 	})
-
 }
 
 func (m *defaultHomestayOrderModel) SelectBuilder() squirrel.SelectBuilder {
 	return squirrel.Select().From(m.table)
 }
+
 func (m *defaultHomestayOrderModel) Delete(ctx context.Context, session sqlx.Session, id int64) error {
 	data, err := m.FindOne(ctx, id)
 	if err != nil {
@@ -418,9 +409,11 @@ func (m *defaultHomestayOrderModel) Delete(ctx context.Context, session sqlx.Ses
 	}, looklookOrderHomestayOrderIdKey, looklookOrderHomestayOrderSnKey)
 	return err
 }
+
 func (m *defaultHomestayOrderModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheLooklookOrderHomestayOrderIdPrefix, primary)
 }
+
 func (m *defaultHomestayOrderModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
 	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", homestayOrderRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)

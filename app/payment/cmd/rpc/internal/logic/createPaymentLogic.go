@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+
 	"looklook/app/payment/cmd/rpc/internal/svc"
 	"looklook/app/payment/cmd/rpc/pb"
 	"looklook/app/payment/model"
@@ -28,7 +29,6 @@ func NewCreatePaymentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 
 // CreatePayment create wechat pay prepayorder.
 func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreatePaymentResp, error) {
-
 	data := new(model.ThirdPayment)
 	data.Sn = uniqueid.GenSn(uniqueid.SN_PREFIX_THIRD_PAYMENT)
 	data.UserId = in.UserId

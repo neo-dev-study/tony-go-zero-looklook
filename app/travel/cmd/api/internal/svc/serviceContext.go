@@ -11,14 +11,14 @@ import (
 )
 
 type ServiceContext struct {
-	//local
+	// local
 	Config config.Config
 
-	//rpc
+	// rpc
 	UsercenterRpc usercenter.Usercenter
 	TravelRpc     travel.Travel
 
-	//model
+	// model
 	HomestayModel         model.HomestayModel
 	HomestayActivityModel model.HomestayActivityModel
 	HomestayBusinessModel model.HomestayBusinessModel
@@ -26,7 +26,6 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-
 	sqlConn := sqlx.NewMysql(c.DB.DataSource)
 
 	return &ServiceContext{

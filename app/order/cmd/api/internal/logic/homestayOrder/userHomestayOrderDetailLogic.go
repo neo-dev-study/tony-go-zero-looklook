@@ -3,6 +3,10 @@ package homestayOrder
 import (
 	"context"
 
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
+
 	"looklook/app/order/cmd/api/internal/svc"
 	"looklook/app/order/cmd/api/internal/types"
 	"looklook/app/order/cmd/rpc/order"
@@ -11,10 +15,6 @@ import (
 	"looklook/pkg/ctxdata"
 	"looklook/pkg/tool"
 	"looklook/pkg/xerr"
-
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type UserHomestayOrderDetailLogic struct {
@@ -32,7 +32,6 @@ func NewUserHomestayOrderDetailLogic(ctx context.Context, svcCtx *svc.ServiceCon
 }
 
 func (l *UserHomestayOrderDetailLogic) UserHomestayOrderDetail(req types.UserHomestayOrderDetailReq) (*types.UserHomestayOrderDetailResp, error) {
-
 	userId := ctxdata.GetUidFromCtx(l.ctx)
 
 	resp, err := l.svcCtx.OrderRpc.HomestayOrderDetail(l.ctx, &order.HomestayOrderDetailReq{
@@ -45,7 +44,9 @@ func (l *UserHomestayOrderDetailLogic) UserHomestayOrderDetail(req types.UserHom
 	var typesOrderDetail types.UserHomestayOrderDetailResp
 	if resp.HomestayOrder != nil && resp.HomestayOrder.UserId == userId {
 
-		copier.Copy(&typesOrderDetail, resp.HomestayOrder)
+		if err := copier.Copy(&typesOrderDetail, resp.HomestayOrder); err != nil {
+			return nil, err // 或适当的错误处理
+		}
 
 		// format price.
 		typesOrderDetail.OrderTotalPrice = tool.Fen2Yuan(resp.HomestayOrder.OrderTotalPrice)
@@ -74,5 +75,4 @@ func (l *UserHomestayOrderDetailLogic) UserHomestayOrderDetail(req types.UserHom
 	}
 
 	return nil, nil
-
 }

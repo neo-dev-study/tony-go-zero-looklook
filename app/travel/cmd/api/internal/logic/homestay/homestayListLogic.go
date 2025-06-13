@@ -2,17 +2,18 @@ package homestay
 
 import (
 	"context"
+
 	"github.com/Masterminds/squirrel"
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/mr"
+
 	"looklook/app/travel/cmd/api/internal/svc"
 	"looklook/app/travel/cmd/api/internal/types"
 	"looklook/app/travel/model"
 	"looklook/pkg/tool"
 	"looklook/pkg/xerr"
-
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/mr"
 )
 
 type HomestayListLogic struct {
@@ -30,7 +31,6 @@ func NewHomestayListLogic(ctx context.Context, svcCtx *svc.ServiceContext) Homes
 }
 
 func (l *HomestayListLogic) HomestayList(req types.HomestayListReq) (*types.HomestayListResp, error) {
-
 	whereBuilder := l.svcCtx.HomestayActivityModel.SelectBuilder().Where(squirrel.Eq{
 		"row_type":   model.HomestayActivityPreferredType,
 		"row_status": model.HomestayActivityUpStatus,
@@ -42,7 +42,7 @@ func (l *HomestayListLogic) HomestayList(req types.HomestayListReq) (*types.Home
 
 	var resp []types.Homestay
 	if len(homestayActivityList) > 0 { // mapreduce example
-		mr.MapReduceVoid(func(source chan<- interface{}) {
+		if err := mr.MapReduceVoid(func(source chan<- interface{}) {
 			for _, homestayActivity := range homestayActivityList {
 				source <- homestayActivity.DataId
 			}
@@ -56,7 +56,6 @@ func (l *HomestayListLogic) HomestayList(req types.HomestayListReq) (*types.Home
 			}
 			writer.Write(homestay)
 		}, func(pipe <-chan *model.Homestay, cancel func(error)) {
-
 			// 【!!notice!!】Why not use copier to make a copy of the whole list here?
 			// 【!!重要!!】这里为什么不使用copier去对整个list进行拷贝？
 
@@ -72,7 +71,9 @@ func (l *HomestayListLogic) HomestayList(req types.HomestayListReq) (*types.Home
 
 				resp = append(resp, tyHomestay)
 			}
-		})
+		}); err != nil {
+			return nil, err // 或适当的错误处理
+		}
 	}
 
 	return &types.HomestayListResp{

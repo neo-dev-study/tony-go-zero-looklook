@@ -3,8 +3,10 @@ package logic
 import (
 	"context"
 	"encoding/json"
-	"github.com/hibiken/asynq"
+
 	"looklook/app/mqueue/cmd/job/jobtype"
+
+	"github.com/hibiken/asynq"
 
 	"looklook/app/order/cmd/rpc/internal/svc"
 	"looklook/app/order/cmd/rpc/pb"
@@ -31,7 +33,6 @@ func NewUpdateHomestayOrderTradeStateLogic(ctx context.Context, svcCtx *svc.Serv
 
 // Update homestay order status
 func (l *UpdateHomestayOrderTradeStateLogic) UpdateHomestayOrderTradeState(in *pb.UpdateHomestayOrderTradeStateReq) (*pb.UpdateHomestayOrderTradeStateResp, error) {
-
 	// 1、Check current order
 	homestayOrder, err := l.svcCtx.HomestayOrderModel.FindOneBySn(l.ctx, in.Sn)
 	if err != nil && err != model.ErrNotFound {
@@ -56,7 +57,7 @@ func (l *UpdateHomestayOrderTradeStateLogic) UpdateHomestayOrderTradeState(in *p
 		return nil, errors.Wrapf(xerr.NewErrMsg("Failed to update homestay order status"), "Failed to update homestay order status db UpdateWithVersion err:%v , in : %v", err, in)
 	}
 
-	//4、notify user
+	// 4、notify user
 	if in.TradeState == model.HomestayOrderTradeStateWaitUse {
 		payload, err := json.Marshal(jobtype.PaySuccessNotifyUserPayload{Order: homestayOrder})
 		if err != nil {
@@ -91,14 +92,12 @@ func (l *UpdateHomestayOrderTradeStateLogic) verifyOrderTradeState(newTradeState
 	}
 
 	if newTradeState == model.HomestayOrderTradeStateCancel {
-
 		if oldTradeState != model.HomestayOrderTradeStateWaitPay {
 			return errors.Wrapf(xerr.NewErrMsg("只有待支付的订单才能被取消"),
 				"Only orders pending payment can be cancelled newTradeState: %d, oldTradeState: %d",
 				newTradeState,
 				oldTradeState)
 		}
-
 	} else if newTradeState == model.HomestayOrderTradeStateWaitUse {
 		if oldTradeState != model.HomestayOrderTradeStateWaitPay {
 			return errors.Wrapf(xerr.NewErrMsg("Only orders pending payment can change this status"),

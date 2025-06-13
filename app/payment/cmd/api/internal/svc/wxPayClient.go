@@ -2,6 +2,7 @@ package svc
 
 import (
 	"context"
+
 	"looklook/app/payment/cmd/api/internal/config"
 	"looklook/pkg/xerr"
 
@@ -12,7 +13,6 @@ import (
 )
 
 func NewWxPayClientV3(c config.Config) (*core.Client, error) {
-
 	mchPrivateKey, err := utils.LoadPrivateKey(c.WxPayConf.PrivateKey)
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrMsg("wechat pay fail"), " wechat pay init fail ，mchPrivateKey err : %v \n", err)
@@ -29,5 +29,4 @@ func NewWxPayClientV3(c config.Config) (*core.Client, error) {
 	}
 
 	return client, nil
-
 }

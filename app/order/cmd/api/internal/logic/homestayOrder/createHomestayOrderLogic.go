@@ -2,6 +2,7 @@ package homestayOrder
 
 import (
 	"context"
+
 	"looklook/app/travel/cmd/rpc/pb"
 	"looklook/pkg/ctxdata"
 
@@ -30,7 +31,6 @@ func NewCreateHomestayOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext
 
 // create order
 func (l *CreateHomestayOrderLogic) CreateHomestayOrder(req types.CreateHomestayOrderReq) (*types.CreateHomestayOrderResp, error) {
-
 	homestayResp, err := l.svcCtx.TravelRpc.HomestayDetail(l.ctx, &pb.HomestayDetailReq{
 		Id: req.HomestayId,
 	})

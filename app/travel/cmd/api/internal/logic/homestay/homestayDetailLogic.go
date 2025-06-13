@@ -2,6 +2,7 @@ package homestay
 
 import (
 	"context"
+
 	"looklook/app/travel/cmd/api/internal/svc"
 	"looklook/app/travel/cmd/api/internal/types"
 	"looklook/app/travel/cmd/rpc/travel"
@@ -28,7 +29,6 @@ func NewHomestayDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) Hom
 }
 
 func (l *HomestayDetailLogic) HomestayDetail(req types.HomestayDetailReq) (*types.HomestayDetailResp, error) {
-
 	homestayResp, err := l.svcCtx.TravelRpc.HomestayDetail(l.ctx, &travel.HomestayDetailReq{
 		Id: req.Id,
 	})

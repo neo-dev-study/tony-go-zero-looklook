@@ -8,13 +8,14 @@ package pb
 
 import (
 	context "context"
+	reflect "reflect"
+	sync "sync"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -24,7 +25,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-//req 、resp
+// req 、resp
 type CreatePaymentReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -109,7 +110,7 @@ type CreatePaymentResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"` //流水记录单号
+	Sn string `protobuf:"bytes,1,opt,name=sn,proto3" json:"sn"` // 流水记录单号
 }
 
 func (x *CreatePaymentResp) Reset() {
@@ -169,8 +170,8 @@ type PaymentDetail struct {
 	ServiceType    string `protobuf:"bytes,11,opt,name=serviceType,proto3" json:"serviceType"`      // 业务类型
 	CreateTime     int64  `protobuf:"varint,12,opt,name=createTime,proto3" json:"createTime"`
 	UpdateTime     int64  `protobuf:"varint,13,opt,name=updateTime,proto3" json:"updateTime"`
-	PayStatus      int64  `protobuf:"varint,14,opt,name=payStatus,proto3" json:"payStatus"` //平台内交易状态  0:未支付 1:支付成功 2:已退款 -1:支付失败
-	PayTime        int64  `protobuf:"varint,15,opt,name=payTime,proto3" json:"payTime"`     //支付成功时间
+	PayStatus      int64  `protobuf:"varint,14,opt,name=payStatus,proto3" json:"payStatus"` // 平台内交易状态  0:未支付 1:支付成功 2:已退款 -1:支付失败
+	PayTime        int64  `protobuf:"varint,15,opt,name=payTime,proto3" json:"payTime"`     // 支付成功时间
 }
 
 func (x *PaymentDetail) Reset() {
@@ -498,7 +499,7 @@ func (x *GetPaymentSuccessRefundByOrderSnResp) GetPaymentDetail() *PaymentDetail
 	return nil
 }
 
-//更新交易状态
+// 更新交易状态
 type UpdateTradeStateReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -746,18 +747,20 @@ func file_payment_proto_rawDescGZIP() []byte {
 	return file_payment_proto_rawDescData
 }
 
-var file_payment_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
-var file_payment_proto_goTypes = []interface{}{
-	(*CreatePaymentReq)(nil),                     // 0: pb.CreatePaymentReq
-	(*CreatePaymentResp)(nil),                    // 1: pb.CreatePaymentResp
-	(*PaymentDetail)(nil),                        // 2: pb.PaymentDetail
-	(*GetPaymentBySnReq)(nil),                    // 3: pb.GetPaymentBySnReq
-	(*GetPaymentBySnResp)(nil),                   // 4: pb.GetPaymentBySnResp
-	(*GetPaymentSuccessRefundByOrderSnReq)(nil),  // 5: pb.GetPaymentSuccessRefundByOrderSnReq
-	(*GetPaymentSuccessRefundByOrderSnResp)(nil), // 6: pb.GetPaymentSuccessRefundByOrderSnResp
-	(*UpdateTradeStateReq)(nil),                  // 7: pb.UpdateTradeStateReq
-	(*UpdateTradeStateResp)(nil),                 // 8: pb.UpdateTradeStateResp
-}
+var (
+	file_payment_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+	file_payment_proto_goTypes  = []interface{}{
+		(*CreatePaymentReq)(nil),                     // 0: pb.CreatePaymentReq
+		(*CreatePaymentResp)(nil),                    // 1: pb.CreatePaymentResp
+		(*PaymentDetail)(nil),                        // 2: pb.PaymentDetail
+		(*GetPaymentBySnReq)(nil),                    // 3: pb.GetPaymentBySnReq
+		(*GetPaymentBySnResp)(nil),                   // 4: pb.GetPaymentBySnResp
+		(*GetPaymentSuccessRefundByOrderSnReq)(nil),  // 5: pb.GetPaymentSuccessRefundByOrderSnReq
+		(*GetPaymentSuccessRefundByOrderSnResp)(nil), // 6: pb.GetPaymentSuccessRefundByOrderSnResp
+		(*UpdateTradeStateReq)(nil),                  // 7: pb.UpdateTradeStateReq
+		(*UpdateTradeStateResp)(nil),                 // 8: pb.UpdateTradeStateResp
+	}
+)
 var file_payment_proto_depIdxs = []int32{
 	2, // 0: pb.GetPaymentBySnResp.paymentDetail:type_name -> pb.PaymentDetail
 	2, // 1: pb.GetPaymentSuccessRefundByOrderSnResp.paymentDetail:type_name -> pb.PaymentDetail
@@ -912,8 +915,10 @@ func file_payment_proto_init() {
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConnInterface
+var (
+	_ context.Context
+	_ grpc.ClientConnInterface
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
@@ -923,13 +928,13 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type PaymentClient interface {
-	//创建微信支付预处理订单
+	// 创建微信支付预处理订单
 	CreatePayment(ctx context.Context, in *CreatePaymentReq, opts ...grpc.CallOption) (*CreatePaymentResp, error)
-	//根据sn查询流水记录
+	// 根据sn查询流水记录
 	GetPaymentBySn(ctx context.Context, in *GetPaymentBySnReq, opts ...grpc.CallOption) (*GetPaymentBySnResp, error)
-	//更新交易状态
+	// 更新交易状态
 	UpdateTradeState(ctx context.Context, in *UpdateTradeStateReq, opts ...grpc.CallOption) (*UpdateTradeStateResp, error)
-	//根据订单sn查询流水记录
+	// 根据订单sn查询流水记录
 	GetPaymentSuccessRefundByOrderSn(ctx context.Context, in *GetPaymentSuccessRefundByOrderSnReq, opts ...grpc.CallOption) (*GetPaymentSuccessRefundByOrderSnResp, error)
 }
 
@@ -979,29 +984,31 @@ func (c *paymentClient) GetPaymentSuccessRefundByOrderSn(ctx context.Context, in
 
 // PaymentServer is the server API for Payment service.
 type PaymentServer interface {
-	//创建微信支付预处理订单
+	// 创建微信支付预处理订单
 	CreatePayment(context.Context, *CreatePaymentReq) (*CreatePaymentResp, error)
-	//根据sn查询流水记录
+	// 根据sn查询流水记录
 	GetPaymentBySn(context.Context, *GetPaymentBySnReq) (*GetPaymentBySnResp, error)
-	//更新交易状态
+	// 更新交易状态
 	UpdateTradeState(context.Context, *UpdateTradeStateReq) (*UpdateTradeStateResp, error)
-	//根据订单sn查询流水记录
+	// 根据订单sn查询流水记录
 	GetPaymentSuccessRefundByOrderSn(context.Context, *GetPaymentSuccessRefundByOrderSnReq) (*GetPaymentSuccessRefundByOrderSnResp, error)
 }
 
 // UnimplementedPaymentServer can be embedded to have forward compatible implementations.
-type UnimplementedPaymentServer struct {
-}
+type UnimplementedPaymentServer struct{}
 
 func (*UnimplementedPaymentServer) CreatePayment(context.Context, *CreatePaymentReq) (*CreatePaymentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePayment not implemented")
 }
+
 func (*UnimplementedPaymentServer) GetPaymentBySn(context.Context, *GetPaymentBySnReq) (*GetPaymentBySnResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPaymentBySn not implemented")
 }
+
 func (*UnimplementedPaymentServer) UpdateTradeState(context.Context, *UpdateTradeStateReq) (*UpdateTradeStateResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTradeState not implemented")
 }
+
 func (*UnimplementedPaymentServer) GetPaymentSuccessRefundByOrderSn(context.Context, *GetPaymentSuccessRefundByOrderSnReq) (*GetPaymentSuccessRefundByOrderSnResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPaymentSuccessRefundByOrderSn not implemented")
 }

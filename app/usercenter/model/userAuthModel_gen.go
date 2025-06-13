@@ -6,10 +6,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"looklook/deploy/script/mysql/genModel"
 	"strings"
-
 	"time"
+
+	"looklook/deploy/script/mysql/genModel"
+
+	"looklook/pkg/globalkey"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
@@ -18,7 +20,6 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
-	"looklook/pkg/globalkey"
 )
 
 var (
@@ -168,7 +169,6 @@ func (m *defaultUserAuthModel) Update(ctx context.Context, session sqlx.Session,
 }
 
 func (m *defaultUserAuthModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, newData *UserAuth) error {
-
 	oldVersion := newData.Version
 	newData.Version += 1
 
@@ -213,7 +213,6 @@ func (m *defaultUserAuthModel) DeleteSoft(ctx context.Context, session sqlx.Sess
 }
 
 func (m *defaultUserAuthModel) FindSum(ctx context.Context, builder squirrel.SelectBuilder, field string) (float64, error) {
-
 	if len(field) == 0 {
 		return 0, errors.Wrapf(errors.New("FindSum Least One Field"), "FindSum Least One Field")
 	}
@@ -236,7 +235,6 @@ func (m *defaultUserAuthModel) FindSum(ctx context.Context, builder squirrel.Sel
 }
 
 func (m *defaultUserAuthModel) FindCount(ctx context.Context, builder squirrel.SelectBuilder, field string) (int64, error) {
-
 	if len(field) == 0 {
 		return 0, errors.Wrapf(errors.New("FindCount Least One Field"), "FindCount Least One Field")
 	}
@@ -259,7 +257,6 @@ func (m *defaultUserAuthModel) FindCount(ctx context.Context, builder squirrel.S
 }
 
 func (m *defaultUserAuthModel) FindAll(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]*UserAuth, error) {
-
 	builder = builder.Columns(userAuthRows)
 
 	if orderBy == "" {
@@ -284,7 +281,6 @@ func (m *defaultUserAuthModel) FindAll(ctx context.Context, builder squirrel.Sel
 }
 
 func (m *defaultUserAuthModel) FindPageListByPage(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*UserAuth, error) {
-
 	builder = builder.Columns(userAuthRows)
 
 	if orderBy == "" {
@@ -314,7 +310,6 @@ func (m *defaultUserAuthModel) FindPageListByPage(ctx context.Context, builder s
 }
 
 func (m *defaultUserAuthModel) FindPageListByPageWithTotal(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*UserAuth, int64, error) {
-
 	total, err := m.FindCount(ctx, builder, "id")
 	if err != nil {
 		return nil, 0, err
@@ -349,7 +344,6 @@ func (m *defaultUserAuthModel) FindPageListByPageWithTotal(ctx context.Context, 
 }
 
 func (m *defaultUserAuthModel) FindPageListByIdDESC(ctx context.Context, builder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*UserAuth, error) {
-
 	builder = builder.Columns(userAuthRows)
 
 	if preMinId > 0 {
@@ -372,7 +366,6 @@ func (m *defaultUserAuthModel) FindPageListByIdDESC(ctx context.Context, builder
 }
 
 func (m *defaultUserAuthModel) FindPageListByIdASC(ctx context.Context, builder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*UserAuth, error) {
-
 	builder = builder.Columns(userAuthRows)
 
 	if preMaxId > 0 {
@@ -395,16 +388,15 @@ func (m *defaultUserAuthModel) FindPageListByIdASC(ctx context.Context, builder 
 }
 
 func (m *defaultUserAuthModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
-
 	return m.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
 		return fn(ctx, session)
 	})
-
 }
 
 func (m *defaultUserAuthModel) SelectBuilder() squirrel.SelectBuilder {
 	return squirrel.Select().From(m.table)
 }
+
 func (m *defaultUserAuthModel) Delete(ctx context.Context, session sqlx.Session, id int64) error {
 	data, err := m.FindOne(ctx, id)
 	if err != nil {
@@ -423,9 +415,11 @@ func (m *defaultUserAuthModel) Delete(ctx context.Context, session sqlx.Session,
 	}, looklookUsercenterUserAuthAuthTypeAuthKeyKey, looklookUsercenterUserAuthIdKey, looklookUsercenterUserAuthUserIdAuthTypeKey)
 	return err
 }
+
 func (m *defaultUserAuthModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheLooklookUsercenterUserAuthIdPrefix, primary)
 }
+
 func (m *defaultUserAuthModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
 	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", userAuthRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)

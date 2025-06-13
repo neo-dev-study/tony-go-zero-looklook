@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+
 	"looklook/app/order/cmd/mq/internal/config"
 	"looklook/app/order/cmd/mq/internal/listen"
 
@@ -30,5 +31,4 @@ func main() {
 	}
 
 	serviceGroup.Start()
-
 }

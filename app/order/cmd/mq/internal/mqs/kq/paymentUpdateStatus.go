@@ -3,6 +3,7 @@ package kq
 import (
 	"context"
 	"encoding/json"
+
 	"looklook/app/order/cmd/mq/internal/svc"
 	"looklook/app/order/cmd/rpc/order"
 	"looklook/app/order/model"
@@ -31,7 +32,6 @@ func NewPaymentUpdateStatusMq(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *PaymentUpdateStatusMq) Consume(_, val string) error {
-
 	var message kqueue.ThirdPaymentUpdatePayStatusNotifyMessage
 	if err := json.Unmarshal([]byte(val), &message); err != nil {
 		logx.WithContext(l.ctx).Error("PaymentUpdateStatusMq->Consume Unmarshal err : %v , val : %s", err, val)
@@ -47,10 +47,9 @@ func (l *PaymentUpdateStatusMq) Consume(_, val string) error {
 }
 
 func (l *PaymentUpdateStatusMq) execService(message kqueue.ThirdPaymentUpdatePayStatusNotifyMessage) error {
-
 	orderTradeState := l.getOrderTradeStateByPaymentTradeState(message.PayStatus)
 	if orderTradeState != -99 {
-		//update homestay order state
+		// update homestay order state
 		_, err := l.svcCtx.OrderRpc.UpdateHomestayOrderTradeState(l.ctx, &order.UpdateHomestayOrderTradeStateReq{
 			Sn:         message.OrderSn,
 			TradeState: orderTradeState,
@@ -65,7 +64,6 @@ func (l *PaymentUpdateStatusMq) execService(message kqueue.ThirdPaymentUpdatePay
 
 // Get order status based on payment status.
 func (l *PaymentUpdateStatusMq) getOrderTradeStateByPaymentTradeState(thirdPaymentPayStatus int64) int64 {
-
 	switch thirdPaymentPayStatus {
 	case paymentModel.ThirdPaymentPayTradeStateSuccess:
 		return model.HomestayOrderTradeStateWaitUse
@@ -74,5 +72,4 @@ func (l *PaymentUpdateStatusMq) getOrderTradeStateByPaymentTradeState(thirdPayme
 	default:
 		return -99
 	}
-
 }

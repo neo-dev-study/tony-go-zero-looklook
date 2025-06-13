@@ -8,13 +8,14 @@ package pb
 
 import (
 	context "context"
+	reflect "reflect"
+	sync "sync"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -938,18 +939,20 @@ func file_order_proto_rawDescGZIP() []byte {
 	return file_order_proto_rawDescData
 }
 
-var file_order_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
-var file_order_proto_goTypes = []interface{}{
-	(*HomestayOrder)(nil),                     // 0: pb.HomestayOrder
-	(*CreateHomestayOrderReq)(nil),            // 1: pb.CreateHomestayOrderReq
-	(*CreateHomestayOrderResp)(nil),           // 2: pb.CreateHomestayOrderResp
-	(*HomestayOrderDetailReq)(nil),            // 3: pb.HomestayOrderDetailReq
-	(*HomestayOrderDetailResp)(nil),           // 4: pb.HomestayOrderDetailResp
-	(*UpdateHomestayOrderTradeStateReq)(nil),  // 5: pb.UpdateHomestayOrderTradeStateReq
-	(*UpdateHomestayOrderTradeStateResp)(nil), // 6: pb.UpdateHomestayOrderTradeStateResp
-	(*UserHomestayOrderListReq)(nil),          // 7: pb.UserHomestayOrderListReq
-	(*UserHomestayOrderListResp)(nil),         // 8: pb.UserHomestayOrderListResp
-}
+var (
+	file_order_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+	file_order_proto_goTypes  = []interface{}{
+		(*HomestayOrder)(nil),                     // 0: pb.HomestayOrder
+		(*CreateHomestayOrderReq)(nil),            // 1: pb.CreateHomestayOrderReq
+		(*CreateHomestayOrderResp)(nil),           // 2: pb.CreateHomestayOrderResp
+		(*HomestayOrderDetailReq)(nil),            // 3: pb.HomestayOrderDetailReq
+		(*HomestayOrderDetailResp)(nil),           // 4: pb.HomestayOrderDetailResp
+		(*UpdateHomestayOrderTradeStateReq)(nil),  // 5: pb.UpdateHomestayOrderTradeStateReq
+		(*UpdateHomestayOrderTradeStateResp)(nil), // 6: pb.UpdateHomestayOrderTradeStateResp
+		(*UserHomestayOrderListReq)(nil),          // 7: pb.UserHomestayOrderListReq
+		(*UserHomestayOrderListResp)(nil),         // 8: pb.UserHomestayOrderListResp
+	}
+)
 var file_order_proto_depIdxs = []int32{
 	0, // 0: pb.HomestayOrderDetailResp.homestayOrder:type_name -> pb.HomestayOrder
 	0, // 1: pb.UserHomestayOrderListResp.list:type_name -> pb.HomestayOrder
@@ -1104,8 +1107,10 @@ func file_order_proto_init() {
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConnInterface
+var (
+	_ context.Context
+	_ grpc.ClientConnInterface
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
@@ -1115,13 +1120,13 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type OrderClient interface {
-	//民宿下订单
+	// 民宿下订单
 	CreateHomestayOrder(ctx context.Context, in *CreateHomestayOrderReq, opts ...grpc.CallOption) (*CreateHomestayOrderResp, error)
-	//民宿订单详情
+	// 民宿订单详情
 	HomestayOrderDetail(ctx context.Context, in *HomestayOrderDetailReq, opts ...grpc.CallOption) (*HomestayOrderDetailResp, error)
-	//更新民宿订单状态
+	// 更新民宿订单状态
 	UpdateHomestayOrderTradeState(ctx context.Context, in *UpdateHomestayOrderTradeStateReq, opts ...grpc.CallOption) (*UpdateHomestayOrderTradeStateResp, error)
-	//用户民宿订单
+	// 用户民宿订单
 	UserHomestayOrderList(ctx context.Context, in *UserHomestayOrderListReq, opts ...grpc.CallOption) (*UserHomestayOrderListResp, error)
 }
 
@@ -1171,29 +1176,31 @@ func (c *orderClient) UserHomestayOrderList(ctx context.Context, in *UserHomesta
 
 // OrderServer is the server API for Order service.
 type OrderServer interface {
-	//民宿下订单
+	// 民宿下订单
 	CreateHomestayOrder(context.Context, *CreateHomestayOrderReq) (*CreateHomestayOrderResp, error)
-	//民宿订单详情
+	// 民宿订单详情
 	HomestayOrderDetail(context.Context, *HomestayOrderDetailReq) (*HomestayOrderDetailResp, error)
-	//更新民宿订单状态
+	// 更新民宿订单状态
 	UpdateHomestayOrderTradeState(context.Context, *UpdateHomestayOrderTradeStateReq) (*UpdateHomestayOrderTradeStateResp, error)
-	//用户民宿订单
+	// 用户民宿订单
 	UserHomestayOrderList(context.Context, *UserHomestayOrderListReq) (*UserHomestayOrderListResp, error)
 }
 
 // UnimplementedOrderServer can be embedded to have forward compatible implementations.
-type UnimplementedOrderServer struct {
-}
+type UnimplementedOrderServer struct{}
 
 func (*UnimplementedOrderServer) CreateHomestayOrder(context.Context, *CreateHomestayOrderReq) (*CreateHomestayOrderResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateHomestayOrder not implemented")
 }
+
 func (*UnimplementedOrderServer) HomestayOrderDetail(context.Context, *HomestayOrderDetailReq) (*HomestayOrderDetailResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HomestayOrderDetail not implemented")
 }
+
 func (*UnimplementedOrderServer) UpdateHomestayOrderTradeState(context.Context, *UpdateHomestayOrderTradeStateReq) (*UpdateHomestayOrderTradeStateResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateHomestayOrderTradeState not implemented")
 }
+
 func (*UnimplementedOrderServer) UserHomestayOrderList(context.Context, *UserHomestayOrderListReq) (*UserHomestayOrderListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserHomestayOrderList not implemented")
 }

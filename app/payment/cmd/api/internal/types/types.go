@@ -15,8 +15,7 @@ type ThirdPaymentWxPayResp struct {
 	SignType  string `json:"signType"`
 }
 
-type ThirdPaymentWxPayCallbackReq struct {
-}
+type ThirdPaymentWxPayCallbackReq struct{}
 
 type ThirdPaymentWxPayCallbackResp struct {
 	ReturnCode string `json:"return_code"`

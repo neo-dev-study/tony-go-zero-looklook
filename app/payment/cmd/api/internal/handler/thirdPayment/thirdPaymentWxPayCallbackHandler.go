@@ -4,15 +4,14 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/zeromicro/go-zero/core/logx"
+
 	"looklook/app/payment/cmd/api/internal/logic/thirdPayment"
 	"looklook/app/payment/cmd/api/internal/svc"
-
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 func ThirdPaymentWxPayCallbackHandler(ctx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		l := thirdPayment.NewThirdPaymentWxPayCallbackLogic(r.Context(), ctx)
 		resp, err := l.ThirdPaymentWxPayCallback(w, r)
 
@@ -24,6 +23,6 @@ func ThirdPaymentWxPayCallbackHandler(ctx *svc.ServiceContext) http.HandlerFunc 
 		}
 
 		logx.Infof("ReturnCode : %s ", resp.ReturnCode)
-		fmt.Fprint(w.(http.ResponseWriter), resp.ReturnCode)
+		fmt.Fprint(w, resp.ReturnCode)
 	}
 }

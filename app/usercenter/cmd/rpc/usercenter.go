@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+
 	"github.com/zeromicro/go-zero/core/service"
 	"google.golang.org/grpc/reflection"
 
@@ -34,7 +35,7 @@ func main() {
 		}
 	})
 
-	//rpc log
+	// rpc log
 	s.AddUnaryInterceptors(rpcserver.LoggerInterceptor)
 
 	defer s.Stop()

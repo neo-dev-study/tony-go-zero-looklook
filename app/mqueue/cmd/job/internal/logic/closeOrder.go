@@ -3,13 +3,15 @@ package logic
 import (
 	"context"
 	"encoding/json"
-	"github.com/hibiken/asynq"
-	"github.com/pkg/errors"
+
 	"looklook/app/mqueue/cmd/job/internal/svc"
 	"looklook/app/mqueue/cmd/job/jobtype"
 	"looklook/app/order/cmd/rpc/order"
 	"looklook/app/order/model"
 	"looklook/pkg/xerr"
+
+	"github.com/hibiken/asynq"
+	"github.com/pkg/errors"
 )
 
 var ErrCloseOrderFal = xerr.NewErrMsg("close order fail")
@@ -27,7 +29,6 @@ func NewCloseHomestayOrderHandler(svcCtx *svc.ServiceContext) *CloseHomestayOrde
 
 // defer  close no pay homestayOrder  : if return err != nil , asynq will retry
 func (l *CloseHomestayOrderHandler) ProcessTask(ctx context.Context, t *asynq.Task) error {
-
 	var p jobtype.DeferCloseHomestayOrderPayload
 	if err := json.Unmarshal(t.Payload(), &p); err != nil {
 		return errors.Wrapf(ErrCloseOrderFal, "closeHomestayOrderStateMqHandler payload err:%v, payLoad:%+v", err, t.Payload())

@@ -6,10 +6,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"looklook/deploy/script/mysql/genModel"
 	"strings"
-
 	"time"
+
+	"looklook/deploy/script/mysql/genModel"
+
+	"looklook/pkg/globalkey"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
@@ -18,7 +20,6 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
-	"looklook/pkg/globalkey"
 )
 
 var (
@@ -152,7 +153,6 @@ func (m *defaultHomestayBusinessModel) Update(ctx context.Context, session sqlx.
 }
 
 func (m *defaultHomestayBusinessModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, newData *HomestayBusiness) error {
-
 	oldVersion := newData.Version
 	newData.Version += 1
 
@@ -196,7 +196,6 @@ func (m *defaultHomestayBusinessModel) DeleteSoft(ctx context.Context, session s
 }
 
 func (m *defaultHomestayBusinessModel) FindSum(ctx context.Context, builder squirrel.SelectBuilder, field string) (float64, error) {
-
 	if len(field) == 0 {
 		return 0, errors.Wrapf(errors.New("FindSum Least One Field"), "FindSum Least One Field")
 	}
@@ -219,7 +218,6 @@ func (m *defaultHomestayBusinessModel) FindSum(ctx context.Context, builder squi
 }
 
 func (m *defaultHomestayBusinessModel) FindCount(ctx context.Context, builder squirrel.SelectBuilder, field string) (int64, error) {
-
 	if len(field) == 0 {
 		return 0, errors.Wrapf(errors.New("FindCount Least One Field"), "FindCount Least One Field")
 	}
@@ -242,7 +240,6 @@ func (m *defaultHomestayBusinessModel) FindCount(ctx context.Context, builder sq
 }
 
 func (m *defaultHomestayBusinessModel) FindAll(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]*HomestayBusiness, error) {
-
 	builder = builder.Columns(homestayBusinessRows)
 
 	if orderBy == "" {
@@ -267,7 +264,6 @@ func (m *defaultHomestayBusinessModel) FindAll(ctx context.Context, builder squi
 }
 
 func (m *defaultHomestayBusinessModel) FindPageListByPage(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*HomestayBusiness, error) {
-
 	builder = builder.Columns(homestayBusinessRows)
 
 	if orderBy == "" {
@@ -297,7 +293,6 @@ func (m *defaultHomestayBusinessModel) FindPageListByPage(ctx context.Context, b
 }
 
 func (m *defaultHomestayBusinessModel) FindPageListByPageWithTotal(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*HomestayBusiness, int64, error) {
-
 	total, err := m.FindCount(ctx, builder, "id")
 	if err != nil {
 		return nil, 0, err
@@ -332,7 +327,6 @@ func (m *defaultHomestayBusinessModel) FindPageListByPageWithTotal(ctx context.C
 }
 
 func (m *defaultHomestayBusinessModel) FindPageListByIdDESC(ctx context.Context, builder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*HomestayBusiness, error) {
-
 	builder = builder.Columns(homestayBusinessRows)
 
 	if preMinId > 0 {
@@ -355,7 +349,6 @@ func (m *defaultHomestayBusinessModel) FindPageListByIdDESC(ctx context.Context,
 }
 
 func (m *defaultHomestayBusinessModel) FindPageListByIdASC(ctx context.Context, builder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*HomestayBusiness, error) {
-
 	builder = builder.Columns(homestayBusinessRows)
 
 	if preMaxId > 0 {
@@ -378,16 +371,15 @@ func (m *defaultHomestayBusinessModel) FindPageListByIdASC(ctx context.Context, 
 }
 
 func (m *defaultHomestayBusinessModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
-
 	return m.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
 		return fn(ctx, session)
 	})
-
 }
 
 func (m *defaultHomestayBusinessModel) SelectBuilder() squirrel.SelectBuilder {
 	return squirrel.Select().From(m.table)
 }
+
 func (m *defaultHomestayBusinessModel) Delete(ctx context.Context, session sqlx.Session, id int64) error {
 	data, err := m.FindOne(ctx, id)
 	if err != nil {
@@ -405,9 +397,11 @@ func (m *defaultHomestayBusinessModel) Delete(ctx context.Context, session sqlx.
 	}, looklookTravelHomestayBusinessIdKey, looklookTravelHomestayBusinessUserIdKey)
 	return err
 }
+
 func (m *defaultHomestayBusinessModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheLooklookTravelHomestayBusinessIdPrefix, primary)
 }
+
 func (m *defaultHomestayBusinessModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
 	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", homestayBusinessRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)

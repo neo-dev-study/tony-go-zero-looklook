@@ -30,8 +30,7 @@ func NewUserHomestayOrderListLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *UserHomestayOrderListLogic) UserHomestayOrderList(req types.UserHomestayOrderListReq) (*types.UserHomestayOrderListResp, error) {
-
-	userId := ctxdata.GetUidFromCtx(l.ctx) //get login user id
+	userId := ctxdata.GetUidFromCtx(l.ctx) // get login user id
 
 	resp, err := l.svcCtx.OrderRpc.UserHomestayOrderList(l.ctx, &order.UserHomestayOrderListReq{
 		UserId:      userId,
@@ -46,7 +45,6 @@ func (l *UserHomestayOrderListLogic) UserHomestayOrderList(req types.UserHomesta
 	var typesUserHomestayOrderList []types.UserHomestayOrderListView
 
 	if len(resp.List) > 0 {
-
 		// 【!!notice!!】Why not use copier to make a copy of the whole list here?
 		// 【!!重要!!】这里为什么不使用copier去对整个list进行拷贝？
 

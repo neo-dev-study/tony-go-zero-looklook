@@ -4,12 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/golang-module/carbon/v2"
-	"github.com/hibiken/asynq"
-	"github.com/pkg/errors"
-	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/service"
+	"time"
+
 	"looklook/app/mqueue/cmd/job/internal/svc"
 	"looklook/app/mqueue/cmd/job/jobtype"
 	"looklook/app/order/model"
@@ -19,7 +15,13 @@ import (
 	"looklook/pkg/tool"
 	"looklook/pkg/wxminisub"
 	"looklook/pkg/xerr"
-	"time"
+
+	"github.com/golang-module/carbon/v2"
+	"github.com/hibiken/asynq"
+	"github.com/pkg/errors"
+	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/service"
 )
 
 var ErrPaySuccessNotifyFail = xerr.NewErrMsg("pay success notify user fail")
@@ -36,7 +38,6 @@ func NewPaySuccessNotifyUserHandler(svcCtx *svc.ServiceContext) *PaySuccessNotif
 }
 
 func (l *PaySuccessNotifyUserHandler) ProcessTask(ctx context.Context, t *asynq.Task) error {
-
 	var p jobtype.PaySuccessNotifyUserPayload
 	if err := json.Unmarshal(t.Payload(), &p); err != nil {
 		return errors.Wrapf(ErrPaySuccessNotifyFail, "PaySuccessNotifyUserHandler payload err:%v, payLoad:%+v", err, t.Payload())
@@ -66,7 +67,6 @@ func (l *PaySuccessNotifyUserHandler) ProcessTask(ctx context.Context, t *asynq.
 
 // get send data
 func (l *PaySuccessNotifyUserHandler) getData(_ context.Context, order *model.HomestayOrder, openId string) []*subscribe.Message {
-
 	return []*subscribe.Message{
 		{
 			ToUser:     openId,
@@ -94,7 +94,6 @@ func (l *PaySuccessNotifyUserHandler) getData(_ context.Context, order *model.Ho
 
 // SendWxMini send to wechat mini
 func (l *PaySuccessNotifyUserHandler) SendWxMini(ctx context.Context, msg *subscribe.Message) {
-
 	if l.svcCtx.Config.Mode != service.ProMode {
 		msg.MiniprogramState = "developer"
 	} else {
@@ -104,7 +103,7 @@ func (l *PaySuccessNotifyUserHandler) SendWxMini(ctx context.Context, msg *subsc
 	var maxRetryNum int64 = 5
 	var retryNum int64
 
-	//Prevent user slowdown, delays, retries
+	// Prevent user slowdown, delays, retries
 	for {
 		time.Sleep(time.Duration(1) * time.Second)
 

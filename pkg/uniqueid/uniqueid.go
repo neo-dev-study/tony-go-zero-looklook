@@ -12,7 +12,6 @@ func init() {
 }
 
 func GenId() int64 {
-
 	id, err := flake.NextID()
 	if err != nil {
 		logx.Severef("flake NextID failed with %s \n", err)

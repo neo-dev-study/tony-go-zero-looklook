@@ -36,7 +36,6 @@ func NewThirdPaymentwxPayLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *ThirdPaymentwxPayLogic) ThirdPaymentwxPay(req types.ThirdPaymentWxPayReq) (*types.ThirdPaymentWxPayResp, error) {
-
 	var totalPrice int64   // Total amount paid for current order(cent)
 	var description string // Current Payment Description.
 
@@ -72,7 +71,6 @@ func (l *ThirdPaymentwxPayLogic) ThirdPaymentwxPay(req types.ThirdPaymentWxPayRe
 
 // Get the price and description information of the current order of the paid B&B
 func (l *ThirdPaymentwxPayLogic) createWxPrePayOrder(serviceType, orderSn string, totalPrice int64, description string) (*jsapi.PrepayWithRequestPaymentResponse, error) {
-
 	// 1、get user openId
 	userId := ctxdata.GetUidFromCtx(l.ctx)
 	userResp, err := l.svcCtx.UsercenterRpc.GetUserAuthByUserId(l.ctx, &usercenter.GetUserAuthByUserIdReq{
@@ -131,12 +129,10 @@ func (l *ThirdPaymentwxPayLogic) createWxPrePayOrder(serviceType, orderSn string
 	}
 
 	return resp, nil
-
 }
 
 // Get the price and description information of the current order of the paid B&B
 func (l *ThirdPaymentwxPayLogic) getPayHomestayPriceDescription(orderSn string) (int64, string, error) {
-
 	description := "homestay pay"
 
 	// get user openid

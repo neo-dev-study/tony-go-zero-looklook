@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+
 	"looklook/app/mqueue/cmd/scheduler/internal/svc"
 )
 
@@ -17,10 +18,6 @@ func NewCronScheduler(ctx context.Context, svcCtx *svc.ServiceContext) *MqueueSc
 	}
 }
 
-func (l *MqueueScheduler) Register()  {
-
+func (l *MqueueScheduler) Register() {
 	l.settleRecordScheduler()
 }
-
-
-

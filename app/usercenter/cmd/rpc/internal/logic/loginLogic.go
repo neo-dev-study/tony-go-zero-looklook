@@ -19,8 +19,10 @@ type LoginLogic struct {
 	logx.Logger
 }
 
-var ErrGenerateTokenError = xerr.NewErrMsg("生成token失败")
-var ErrUsernamePwdError = xerr.NewErrMsg("账号或密码不正确")
+var (
+	ErrGenerateTokenError = xerr.NewErrMsg("生成token失败")
+	ErrUsernamePwdError   = xerr.NewErrMsg("账号或密码不正确")
+)
 
 func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic {
 	return &LoginLogic{
@@ -31,7 +33,6 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(in *usercenter.LoginReq) (*usercenter.LoginResp, error) {
-
 	var userId int64
 	var err error
 	switch in.AuthType {
@@ -44,7 +45,7 @@ func (l *LoginLogic) Login(in *usercenter.LoginReq) (*usercenter.LoginResp, erro
 		return nil, err
 	}
 
-	//2、Generate the token, so that the service doesn't call rpc internally
+	// 2、Generate the token, so that the service doesn't call rpc internally
 	generateTokenLogic := NewGenerateTokenLogic(l.ctx, l.svcCtx)
 	tokenResp, err := generateTokenLogic.GenerateToken(&usercenter.GenerateTokenReq{
 		UserId: userId,
@@ -61,7 +62,6 @@ func (l *LoginLogic) Login(in *usercenter.LoginReq) (*usercenter.LoginResp, erro
 }
 
 func (l *LoginLogic) loginByMobile(mobile, password string) (int64, error) {
-
 	user, err := l.svcCtx.UserModel.FindOneByMobile(l.ctx, mobile)
 	if err != nil && err != model.ErrNotFound {
 		return 0, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "根据手机号查询用户信息失败，mobile:%s,err:%v", mobile, err)

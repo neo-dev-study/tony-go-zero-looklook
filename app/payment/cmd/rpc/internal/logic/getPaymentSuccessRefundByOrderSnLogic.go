@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+
 	"looklook/app/payment/cmd/rpc/internal/svc"
 	"looklook/app/payment/cmd/rpc/pb"
 	"looklook/app/payment/model"
@@ -27,7 +28,6 @@ func NewGetPaymentSuccessRefundByOrderSnLogic(ctx context.Context, svcCtx *svc.S
 }
 
 func (l *GetPaymentSuccessRefundByOrderSnLogic) GetPaymentSuccessRefundByOrderSn(in *pb.GetPaymentSuccessRefundByOrderSnReq) (*pb.GetPaymentSuccessRefundByOrderSnResp, error) {
-
 	whereBuilder := l.svcCtx.ThirdPaymentModel.SelectBuilder().Where(
 		"order_sn = ? and (trade_state = ? or trade_state = ? )",
 		in.OrderSn, model.ThirdPaymentPayTradeStateSuccess, model.ThirdPaymentPayTradeStateRefund,

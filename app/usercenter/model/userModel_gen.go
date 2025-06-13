@@ -6,10 +6,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"looklook/deploy/script/mysql/genModel"
 	"strings"
-
 	"time"
+
+	"looklook/deploy/script/mysql/genModel"
+
+	"looklook/pkg/globalkey"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
@@ -18,7 +20,6 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
-	"looklook/pkg/globalkey"
 )
 
 var (
@@ -147,7 +148,6 @@ func (m *defaultUserModel) Update(ctx context.Context, session sqlx.Session, new
 }
 
 func (m *defaultUserModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, newData *User) error {
-
 	oldVersion := newData.Version
 	newData.Version += 1
 
@@ -191,7 +191,6 @@ func (m *defaultUserModel) DeleteSoft(ctx context.Context, session sqlx.Session,
 }
 
 func (m *defaultUserModel) FindSum(ctx context.Context, builder squirrel.SelectBuilder, field string) (float64, error) {
-
 	if len(field) == 0 {
 		return 0, errors.Wrapf(errors.New("FindSum Least One Field"), "FindSum Least One Field")
 	}
@@ -214,7 +213,6 @@ func (m *defaultUserModel) FindSum(ctx context.Context, builder squirrel.SelectB
 }
 
 func (m *defaultUserModel) FindCount(ctx context.Context, builder squirrel.SelectBuilder, field string) (int64, error) {
-
 	if len(field) == 0 {
 		return 0, errors.Wrapf(errors.New("FindCount Least One Field"), "FindCount Least One Field")
 	}
@@ -237,7 +235,6 @@ func (m *defaultUserModel) FindCount(ctx context.Context, builder squirrel.Selec
 }
 
 func (m *defaultUserModel) FindAll(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]*User, error) {
-
 	builder = builder.Columns(userRows)
 
 	if orderBy == "" {
@@ -262,7 +259,6 @@ func (m *defaultUserModel) FindAll(ctx context.Context, builder squirrel.SelectB
 }
 
 func (m *defaultUserModel) FindPageListByPage(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*User, error) {
-
 	builder = builder.Columns(userRows)
 
 	if orderBy == "" {
@@ -292,7 +288,6 @@ func (m *defaultUserModel) FindPageListByPage(ctx context.Context, builder squir
 }
 
 func (m *defaultUserModel) FindPageListByPageWithTotal(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*User, int64, error) {
-
 	total, err := m.FindCount(ctx, builder, "id")
 	if err != nil {
 		return nil, 0, err
@@ -327,7 +322,6 @@ func (m *defaultUserModel) FindPageListByPageWithTotal(ctx context.Context, buil
 }
 
 func (m *defaultUserModel) FindPageListByIdDESC(ctx context.Context, builder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*User, error) {
-
 	builder = builder.Columns(userRows)
 
 	if preMinId > 0 {
@@ -350,7 +344,6 @@ func (m *defaultUserModel) FindPageListByIdDESC(ctx context.Context, builder squ
 }
 
 func (m *defaultUserModel) FindPageListByIdASC(ctx context.Context, builder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*User, error) {
-
 	builder = builder.Columns(userRows)
 
 	if preMaxId > 0 {
@@ -373,16 +366,15 @@ func (m *defaultUserModel) FindPageListByIdASC(ctx context.Context, builder squi
 }
 
 func (m *defaultUserModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
-
 	return m.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
 		return fn(ctx, session)
 	})
-
 }
 
 func (m *defaultUserModel) SelectBuilder() squirrel.SelectBuilder {
 	return squirrel.Select().From(m.table)
 }
+
 func (m *defaultUserModel) Delete(ctx context.Context, session sqlx.Session, id int64) error {
 	data, err := m.FindOne(ctx, id)
 	if err != nil {
@@ -400,9 +392,11 @@ func (m *defaultUserModel) Delete(ctx context.Context, session sqlx.Session, id 
 	}, looklookUsercenterUserIdKey, looklookUsercenterUserMobileKey)
 	return err
 }
+
 func (m *defaultUserModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheLooklookUsercenterUserIdPrefix, primary)
 }
+
 func (m *defaultUserModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
 	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", userRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)

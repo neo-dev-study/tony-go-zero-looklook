@@ -7,15 +7,15 @@ type Homestay struct {
 	SubTitle            string  `json:"subTitle"`
 	Banner              string  `json:"banner"`
 	Info                string  `json:"info"`
-	PeopleNum           int64   `json:"peopleNum"`           //容纳人的数量
-	HomestayBusinessId  int64   `json:"homestayBusinessId"`  //店铺id
-	UserId              int64   `json:"userId"`              //房东id
-	RowState            int64   `json:"rowState"`            //0:下架 1:上架
-	RowType             int64   `json:"rowType"`             //售卖类型0：按房间出售 1:按人次出售
-	FoodInfo            string  `json:"foodInfo"`            //餐食标准
-	FoodPrice           float64 `json:"foodPrice"`           //餐食价格
-	HomestayPrice       float64 `json:"homestayPrice"`       //民宿价格
-	MarketHomestayPrice float64 `json:"marketHomestayPrice"` //民宿市场价格
+	PeopleNum           int64   `json:"peopleNum"`           // 容纳人的数量
+	HomestayBusinessId  int64   `json:"homestayBusinessId"`  // 店铺id
+	UserId              int64   `json:"userId"`              // 房东id
+	RowState            int64   `json:"rowState"`            // 0:下架 1:上架
+	RowType             int64   `json:"rowType"`             // 售卖类型0：按房间出售 1:按人次出售
+	FoodInfo            string  `json:"foodInfo"`            // 餐食标准
+	FoodPrice           float64 `json:"foodPrice"`           // 餐食价格
+	HomestayPrice       float64 `json:"homestayPrice"`       // 民宿价格
+	MarketHomestayPrice float64 `json:"marketHomestayPrice"` // 民宿市场价格
 }
 
 type BusinessListReq struct {
@@ -37,8 +37,7 @@ type HomestayListResp struct {
 	List []Homestay `json:"list"`
 }
 
-type GuessListReq struct {
-}
+type GuessListReq struct{}
 
 type GuessListResp struct {
 	List []Homestay `json:"list"`
@@ -57,23 +56,22 @@ type HomestayBusinessBoss struct {
 	UserId   int64  `json:"userId"`
 	Nickname string `json:"nickname"`
 	Avatar   string `json:"avatar"`
-	Info     string `json:"info"` //房东介绍
-	Rank     int64  `json:"rank"` //排名
+	Info     string `json:"info"` // 房东介绍
+	Rank     int64  `json:"rank"` // 排名
 }
 
 type HomestayBusiness struct {
 	Id        int64   `json:"id"`
-	Title     string  `json:"title"` //店铺名称
-	Info      string  `json:"info"`  //店铺介绍
-	Tags      string  `json:"tags"`  //标签，多个用“,”分割
+	Title     string  `json:"title"` // 店铺名称
+	Info      string  `json:"info"`  // 店铺介绍
+	Tags      string  `json:"tags"`  // 标签，多个用“,”分割
 	Cover     string  `json:"cover"` //
 	Star      float64 `json:"star"`
 	IsFav     int64   `json:"isFav"`
-	HeaderImg string  `json:"headerImg"` //店招门头图片
+	HeaderImg string  `json:"headerImg"` // 店招门头图片
 }
 
-type GoodBossReq struct {
-}
+type GoodBossReq struct{}
 
 type GoodBossResp struct {
 	List []HomestayBusinessBoss `json:"list"`
@@ -81,8 +79,8 @@ type GoodBossResp struct {
 
 type HomestayBusinessListInfo struct {
 	HomestayBusiness
-	SellMonth     int64 `json:"sellMonth"`     //月销售
-	PersonConsume int64 `json:"personConsume"` //个人消费
+	SellMonth     int64 `json:"sellMonth"`     // 月销售
+	PersonConsume int64 `json:"personConsume"` // 个人消费
 }
 
 type HomestayBussinessListReq struct {

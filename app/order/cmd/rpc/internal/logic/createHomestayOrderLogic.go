@@ -3,10 +3,12 @@ package logic
 import (
 	"context"
 	"encoding/json"
-	"github.com/hibiken/asynq"
-	"looklook/app/mqueue/cmd/job/jobtype"
 	"strings"
 	"time"
+
+	"looklook/app/mqueue/cmd/job/jobtype"
+
+	"github.com/hibiken/asynq"
 
 	"looklook/app/order/cmd/rpc/internal/svc"
 	"looklook/app/order/cmd/rpc/pb"
@@ -20,7 +22,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-const CloseOrderTimeMinutes = 30 //defer close order time
+const CloseOrderTimeMinutes = 30 // defer close order time
 
 type CreateHomestayOrderLogic struct {
 	ctx    context.Context
@@ -38,8 +40,7 @@ func NewCreateHomestayOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext
 
 // CreateHomestayOrder.
 func (l *CreateHomestayOrderLogic) CreateHomestayOrder(in *pb.CreateHomestayOrderReq) (*pb.CreateHomestayOrderResp, error) {
-
-	//1、Create Order
+	// 1、Create Order
 	if in.LiveEndTime <= in.LiveStartTime {
 		return nil, errors.Wrapf(xerr.NewErrMsg("Stay at least one night"), "Place an order at a B&B. The end time of your stay must be greater than the start time. in : %+v", in)
 	}
@@ -54,7 +55,7 @@ func (l *CreateHomestayOrderLogic) CreateHomestayOrder(in *pb.CreateHomestayOrde
 		return nil, errors.Wrapf(xerr.NewErrMsg("This record does not exist"), "This record does not exist , homestayId : %d ", in.HomestayId)
 	}
 
-	var cover string //Get the cover...
+	var cover string // Get the cover...
 	if len(resp.Homestay.Banner) > 0 {
 		cover = strings.Split(resp.Homestay.Banner, ",")[0]
 	}
@@ -82,23 +83,23 @@ func (l *CreateHomestayOrderLogic) CreateHomestayOrder(in *pb.CreateHomestayOrde
 	order.LiveStartDate = time.Unix(in.LiveStartTime, 0)
 	order.LiveEndDate = time.Unix(in.LiveEndTime, 0)
 
-	liveDays := int64(order.LiveEndDate.Sub(order.LiveStartDate).Seconds() / 86400) //Stayed a few days in total
+	liveDays := int64(order.LiveEndDate.Sub(order.LiveStartDate).Seconds() / 86400) // Stayed a few days in total
 
-	order.HomestayTotalPrice = int64(resp.Homestay.HomestayPrice * liveDays) //Calculate the total price of the B&B
+	order.HomestayTotalPrice = int64(resp.Homestay.HomestayPrice * liveDays) // Calculate the total price of the B&B
 	if in.IsFood {
 		order.NeedFood = model.HomestayOrderNeedFoodYes
-		//Calculate the total price of the meal.
+		// Calculate the total price of the meal.
 		order.FoodTotalPrice = int64(resp.Homestay.FoodPrice * in.LivePeopleNum * liveDays)
 	}
 
-	order.OrderTotalPrice = order.HomestayTotalPrice + order.FoodTotalPrice //Calculate total order price.
+	order.OrderTotalPrice = order.HomestayTotalPrice + order.FoodTotalPrice // Calculate total order price.
 
 	_, err = l.svcCtx.HomestayOrderModel.Insert(l.ctx, nil, order)
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Order Database Exception order : %+v , err: %v", order, err)
 	}
 
-	//2、Delayed closing of order tasks.
+	// 2、Delayed closing of order tasks.
 	payload, err := json.Marshal(jobtype.DeferCloseHomestayOrderPayload{Sn: order.Sn})
 	if err != nil {
 		logx.WithContext(l.ctx).Errorf("create defer close order task json Marshal fail err :%+v , sn : %s", err, order.Sn)

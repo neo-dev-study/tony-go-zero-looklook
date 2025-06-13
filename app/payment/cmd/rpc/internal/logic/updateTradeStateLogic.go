@@ -3,8 +3,9 @@ package logic
 import (
 	"context"
 	"encoding/json"
-	"looklook/pkg/kqueue"
 	"time"
+
+	"looklook/pkg/kqueue"
 
 	"looklook/app/payment/cmd/rpc/internal/svc"
 	"looklook/app/payment/cmd/rpc/pb"
@@ -30,8 +31,7 @@ func NewUpdateTradeStateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*pb.UpdateTradeStateResp, error) {
-
-	//1、payment record confirm
+	// 1、payment record confirm
 	thirdPayment, err := l.svcCtx.ThirdPaymentModel.FindOneBySn(l.ctx, in.Sn)
 	if err != nil && err != model.ErrNotFound {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "UpdateTradeState FindOneBySn db err , sn : %s , err : %+v", in.Sn, err)
@@ -41,15 +41,14 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 		return nil, errors.Wrapf(xerr.NewErrMsg("third payment record no exists"), " sn : %s", in.Sn)
 	}
 
-	//2、Judgment Status
+	// 2、Judgment Status
 	if in.PayStatus == model.ThirdPaymentPayTradeStateSuccess || in.PayStatus == model.ThirdPaymentPayTradeStateFAIL {
-		//Want to modify as payment success, failure scenarios
+		// Want to modify as payment success, failure scenarios
 		if thirdPayment.PayStatus != model.ThirdPaymentPayTradeStateWait {
 			return &pb.UpdateTradeStateResp{}, nil
 		}
-
 	} else if in.PayStatus == model.ThirdPaymentPayTradeStateRefund {
-		//Want to change to refund success scenario
+		// Want to change to refund success scenario
 
 		if thirdPayment.PayStatus != model.ThirdPaymentPayTradeStateSuccess {
 			return nil, errors.Wrapf(xerr.NewErrMsg("Only orders with successful payment can be refunded"), "Only orders with successful payment can be refunded in : %+v", in)
@@ -58,7 +57,7 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 		return nil, errors.Wrapf(xerr.NewErrMsg("This status is not currently supported"), "Modify payment flow status is not supported  in : %+v", in)
 	}
 
-	//3、update .
+	// 3、update .
 	thirdPayment.TradeState = in.TradeState
 	thirdPayment.TransactionId = in.TransactionId
 	thirdPayment.TradeType = in.TradeType
@@ -69,7 +68,7 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), " UpdateTradeState UpdateWithVersion db  err:%v ,thirdPayment : %+v , in : %+v", err, thirdPayment, in)
 	}
 
-	//4、notify  sub "payment-update-paystatus-topic"  services(order-mq ..), pub、sub use kq
+	// 4、notify  sub "payment-update-paystatus-topic"  services(order-mq ..), pub、sub use kq
 	if err := l.pubKqPaySuccess(in.Sn, in.PayStatus); err != nil {
 		logx.WithContext(l.ctx).Errorf("l.pubKqPaySuccess : %+v", err)
 	}
@@ -78,7 +77,6 @@ func (l *UpdateTradeStateLogic) UpdateTradeState(in *pb.UpdateTradeStateReq) (*p
 }
 
 func (l *UpdateTradeStateLogic) pubKqPaySuccess(orderSn string, payStatus int64) error {
-
 	m := kqueue.ThirdPaymentUpdatePayStatusNotifyMessage{
 		OrderSn:   orderSn,
 		PayStatus: payStatus,
