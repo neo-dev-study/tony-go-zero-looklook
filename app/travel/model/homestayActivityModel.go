@@ -56,7 +56,6 @@ func (m *defaultHomestayActivityModel) DeleteSoft(ctx context.Context, session s
 }
 
 func (m *defaultHomestayActivityModel) FindOneByQuery(ctx context.Context, rowBuilder squirrel.SelectBuilder) (*HomestayActivity, error) {
-
 	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	if err != nil {
 		return nil, err
@@ -73,7 +72,6 @@ func (m *defaultHomestayActivityModel) FindOneByQuery(ctx context.Context, rowBu
 }
 
 func (m *defaultHomestayActivityModel) FindSum(ctx context.Context, sumBuilder squirrel.SelectBuilder) (float64, error) {
-
 	query, values, err := sumBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	if err != nil {
 		return 0, err
@@ -90,7 +88,6 @@ func (m *defaultHomestayActivityModel) FindSum(ctx context.Context, sumBuilder s
 }
 
 func (m *defaultHomestayActivityModel) FindCount(ctx context.Context, countBuilder squirrel.SelectBuilder) (int64, error) {
-
 	query, values, err := countBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	if err != nil {
 		return 0, err
@@ -107,7 +104,6 @@ func (m *defaultHomestayActivityModel) FindCount(ctx context.Context, countBuild
 }
 
 func (m *defaultHomestayActivityModel) FindAll(ctx context.Context, rowBuilder squirrel.SelectBuilder, orderBy string) ([]*HomestayActivity, error) {
-
 	if orderBy == "" {
 		rowBuilder = rowBuilder.OrderBy("id DESC")
 	} else {
@@ -130,7 +126,6 @@ func (m *defaultHomestayActivityModel) FindAll(ctx context.Context, rowBuilder s
 }
 
 func (m *defaultHomestayActivityModel) FindPageListByPage(ctx context.Context, rowBuilder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*HomestayActivity, error) {
-
 	if orderBy == "" {
 		rowBuilder = rowBuilder.OrderBy("id DESC")
 	} else {
@@ -158,7 +153,6 @@ func (m *defaultHomestayActivityModel) FindPageListByPage(ctx context.Context, r
 }
 
 func (m *defaultHomestayActivityModel) FindPageListByIdDESC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*HomestayActivity, error) {
-
 	if preMinId > 0 {
 		rowBuilder = rowBuilder.Where(" id < ? ", preMinId)
 	}
@@ -178,9 +172,8 @@ func (m *defaultHomestayActivityModel) FindPageListByIdDESC(ctx context.Context,
 	}
 }
 
-//按照id升序分页查询数据，不支持排序
+// 按照id升序分页查询数据，不支持排序
 func (m *defaultHomestayActivityModel) FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*HomestayActivity, error) {
-
 	if preMaxId > 0 {
 		rowBuilder = rowBuilder.Where(" id > ? ", preMaxId)
 	}
@@ -202,11 +195,9 @@ func (m *defaultHomestayActivityModel) FindPageListByIdASC(ctx context.Context, 
 
 // export logic
 func (m *defaultHomestayActivityModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
-
 	return m.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
 		return fn(ctx, session)
 	})
-
 }
 
 // export logic

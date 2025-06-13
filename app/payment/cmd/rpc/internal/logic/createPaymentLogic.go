@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+
 	"looklook/app/payment/cmd/rpc/internal/svc"
 	"looklook/app/payment/cmd/rpc/pb"
 	"looklook/app/payment/model"
@@ -28,7 +29,6 @@ func NewCreatePaymentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 
 // CreatePayment create wechat pay prepayorder.
 func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreatePaymentResp, error) {
-
 	data := new(model.ThirdPayment)
 	data.Sn = uniqueid.GenSn(uniqueid.SN_PREFIX_THIRD_PAYMENT)
 	data.UserId = in.UserId
@@ -37,7 +37,7 @@ func (l *CreatePaymentLogic) CreatePayment(in *pb.CreatePaymentReq) (*pb.CreateP
 	data.OrderSn = in.OrderSn
 	data.ServiceType = model.ThirdPaymentServiceTypeHomestayOrder
 
-	_, err := l.svcCtx.ThirdPaymentModel.Insert(l.ctx,nil, data)
+	_, err := l.svcCtx.ThirdPaymentModel.Insert(l.ctx, nil, data)
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "create wechat pay prepayorder db insert fail , err:%v ,data : %+v  ", err, data)
 	}

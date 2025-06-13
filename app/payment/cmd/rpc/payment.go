@@ -35,7 +35,7 @@ func main() {
 		}
 	})
 
-	//rpc log
+	// rpc log
 	s.AddUnaryInterceptors(rpcserver.LoggerInterceptor)
 
 	defer s.Stop()

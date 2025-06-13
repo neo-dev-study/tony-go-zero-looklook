@@ -3,6 +3,10 @@ package homestayOrder
 import (
 	"context"
 
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
+
 	"looklook/app/order/cmd/api/internal/svc"
 	"looklook/app/order/cmd/api/internal/types"
 	"looklook/app/order/cmd/rpc/order"
@@ -11,10 +15,6 @@ import (
 	"looklook/common/ctxdata"
 	"looklook/common/tool"
 	"looklook/common/xerr"
-
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type UserHomestayOrderDetailLogic struct {
@@ -32,7 +32,6 @@ func NewUserHomestayOrderDetailLogic(ctx context.Context, svcCtx *svc.ServiceCon
 }
 
 func (l *UserHomestayOrderDetailLogic) UserHomestayOrderDetail(req types.UserHomestayOrderDetailReq) (*types.UserHomestayOrderDetailResp, error) {
-
 	userId := ctxdata.GetUidFromCtx(l.ctx)
 
 	resp, err := l.svcCtx.OrderRpc.HomestayOrderDetail(l.ctx, &order.HomestayOrderDetailReq{
@@ -45,9 +44,12 @@ func (l *UserHomestayOrderDetailLogic) UserHomestayOrderDetail(req types.UserHom
 	var typesOrderDetail types.UserHomestayOrderDetailResp
 	if resp.HomestayOrder != nil && resp.HomestayOrder.UserId == userId {
 
-		copier.Copy(&typesOrderDetail, resp.HomestayOrder)
+		// copier.Copy(&typesOrderDetail, resp.HomestayOrder)
+		if err := copier.Copy(&typesOrderDetail, resp.HomestayOrder); err != nil {
+			return nil, err // 或适当的错误处理
+		}
 
-		//重置价格.
+		// 重置价格.
 		typesOrderDetail.OrderTotalPrice = tool.Fen2Yuan(resp.HomestayOrder.OrderTotalPrice)
 		typesOrderDetail.FoodTotalPrice = tool.Fen2Yuan(resp.HomestayOrder.FoodTotalPrice)
 		typesOrderDetail.HomestayTotalPrice = tool.Fen2Yuan(resp.HomestayOrder.HomestayTotalPrice)
@@ -55,7 +57,7 @@ func (l *UserHomestayOrderDetailLogic) UserHomestayOrderDetail(req types.UserHom
 		typesOrderDetail.FoodPrice = tool.Fen2Yuan(resp.HomestayOrder.FoodPrice)
 		typesOrderDetail.MarketHomestayPrice = tool.Fen2Yuan(resp.HomestayOrder.MarketHomestayPrice)
 
-		//支付信息.
+		// 支付信息.
 		if typesOrderDetail.TradeState != model.HomestayOrderTradeStateCancel && typesOrderDetail.TradeState != model.HomestayOrderTradeStateWaitPay {
 			paymentResp, err := l.svcCtx.PaymentRpc.GetPaymentSuccessRefundByOrderSn(l.ctx, &payment.GetPaymentSuccessRefundByOrderSnReq{
 				OrderSn: resp.HomestayOrder.Sn,
@@ -74,5 +76,4 @@ func (l *UserHomestayOrderDetailLogic) UserHomestayOrderDetail(req types.UserHom
 	}
 
 	return nil, nil
-
 }

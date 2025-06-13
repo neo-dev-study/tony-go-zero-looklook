@@ -130,7 +130,6 @@ func (m *defaultUserModel) Update(ctx context.Context, session sqlx.Session, dat
 }
 
 func (m *defaultUserModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, data *User) error {
-
 	oldVersion := data.Version
 	data.Version += 1
 
@@ -181,6 +180,7 @@ func (m *defaultUserModel) Delete(ctx context.Context, session sqlx.Session, id 
 func (m *defaultUserModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheLooklookUsercenterUserIdPrefix, primary)
 }
+
 func (m *defaultUserModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
 	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", userRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)

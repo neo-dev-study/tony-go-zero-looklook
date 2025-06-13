@@ -21,7 +21,6 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.PaymentConfig) *ServiceContext {
-
 	return &ServiceContext{
 		Config: c,
 

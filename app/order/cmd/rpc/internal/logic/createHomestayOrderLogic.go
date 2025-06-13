@@ -3,11 +3,14 @@ package logic
 import (
 	"context"
 	"encoding/json"
-	"github.com/hibiken/asynq"
-	"looklook/app/mqueue/cmd/job/jobtype"
 	"strings"
 	"time"
 
+	"github.com/hibiken/asynq"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
+
+	"looklook/app/mqueue/cmd/job/jobtype"
 	"looklook/app/order/cmd/rpc/internal/svc"
 	"looklook/app/order/cmd/rpc/pb"
 	"looklook/app/order/model"
@@ -15,12 +18,9 @@ import (
 	"looklook/common/tool"
 	"looklook/common/uniqueid"
 	"looklook/common/xerr"
-
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
-const CloseOrderTimeMinutes = 30 //defer close order time
+const CloseOrderTimeMinutes = 30 // defer close order time
 
 type CreateHomestayOrderLogic struct {
 	ctx    context.Context
@@ -38,13 +38,15 @@ func NewCreateHomestayOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext
 
 // CreateHomestayOrder.
 func (l *CreateHomestayOrderLogic) CreateHomestayOrder(in *pb.CreateHomestayOrderReq) (*pb.CreateHomestayOrderResp, error) {
-
-	//1、Create Order
+	// 1、Create Order
 	if in.LiveEndTime <= in.LiveStartTime {
 		return nil, errors.Wrapf(xerr.NewErrMsg("Stay at least one night"), "Place an order at a B&B. The end time of your stay must be greater than the start time. in : %+v", in)
 	}
 
 	homestayDetail, err := l.getHomestayDetail(in.HomestayId)
+	if err != nil {
+		return nil, err
+	}
 
 	order := l.generateOrder(in, homestayDetail)
 	_, err = l.svcCtx.HomestayOrderModel.Insert(l.ctx, nil, order)
@@ -52,7 +54,7 @@ func (l *CreateHomestayOrderLogic) CreateHomestayOrder(in *pb.CreateHomestayOrde
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "Order Database Exception order : %+v , err: %v", order, err)
 	}
 
-	//2、Delayed closing of order tasks.
+	// 2、Delayed closing of order tasks.
 	l.delayClosingOrder(order.Sn)
 
 	return &pb.CreateHomestayOrderResp{
@@ -74,7 +76,7 @@ func (l *CreateHomestayOrderLogic) getHomestayDetail(homestayId int64) (*travel.
 }
 
 func (l *CreateHomestayOrderLogic) generateOrder(in *pb.CreateHomestayOrderReq, homestayDetail *travel.HomestayDetailResp) *model.HomestayOrder {
-	var cover string //Get the cover...
+	var cover string // Get the cover...
 	if len(homestayDetail.Homestay.Banner) > 0 {
 		cover = strings.Split(homestayDetail.Homestay.Banner, ",")[0]
 	}
@@ -102,16 +104,16 @@ func (l *CreateHomestayOrderLogic) generateOrder(in *pb.CreateHomestayOrderReq, 
 	order.LiveStartDate = time.Unix(in.LiveStartTime, 0)
 	order.LiveEndDate = time.Unix(in.LiveEndTime, 0)
 
-	liveDays := int64(order.LiveEndDate.Sub(order.LiveStartDate).Seconds() / 86400) //Stayed a few days in total
+	liveDays := int64(order.LiveEndDate.Sub(order.LiveStartDate).Seconds() / 86400) // Stayed a few days in total
 
-	order.HomestayTotalPrice = homestayDetail.Homestay.HomestayPrice * liveDays //Calculate the total price of the B&B
+	order.HomestayTotalPrice = homestayDetail.Homestay.HomestayPrice * liveDays // Calculate the total price of the B&B
 	if in.IsFood {
 		order.NeedFood = model.HomestayOrderNeedFoodYes
-		//Calculate the total price of the meal.
+		// Calculate the total price of the meal.
 		order.FoodTotalPrice = homestayDetail.Homestay.FoodPrice * in.LivePeopleNum * liveDays
 	}
 
-	order.OrderTotalPrice = order.HomestayTotalPrice + order.FoodTotalPrice //Calculate total order price.
+	order.OrderTotalPrice = order.HomestayTotalPrice + order.FoodTotalPrice // Calculate total order price.
 	return order
 }
 

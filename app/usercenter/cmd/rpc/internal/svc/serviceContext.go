@@ -17,7 +17,6 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.UsercenterConfig) *ServiceContext {
-
 	sqlConn := sqlx.NewMysql(c.DB.DataSource)
 
 	return &ServiceContext{

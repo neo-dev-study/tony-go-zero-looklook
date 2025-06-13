@@ -2,18 +2,18 @@ package homestayBussiness
 
 import (
 	"context"
+
 	"github.com/Masterminds/squirrel"
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/mr"
 
 	"looklook/app/travel/cmd/api/internal/svc"
 	"looklook/app/travel/cmd/api/internal/types"
 	"looklook/app/travel/model"
 	"looklook/app/usercenter/cmd/rpc/usercenter"
 	"looklook/common/xerr"
-
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/mr"
 )
 
 type GoodBossLogic struct {
@@ -31,7 +31,6 @@ func NewGoodBossLogic(ctx context.Context, svcCtx *svc.ServiceContext) GoodBossL
 }
 
 func (l *GoodBossLogic) GoodBoss(req types.GoodBossReq) (*types.GoodBossResp, error) {
-
 	whereBuilder := l.svcCtx.HomestayActivityModel.RowBuilder().Where(squirrel.Eq{
 		"row_type":   model.HomestayActivityGoodBusiType,
 		"row_status": model.HomestayActivityUpStatus,
@@ -43,8 +42,7 @@ func (l *GoodBossLogic) GoodBoss(req types.GoodBossReq) (*types.GoodBossResp, er
 
 	var resp []types.HomestayBusinessBoss
 	if len(homestayActivityList) > 0 {
-
-		mr.MapReduceVoid(func(source chan<- interface{}) {
+		if err := mr.MapReduceVoid(func(source chan<- interface{}) {
 			for _, homestayActivity := range homestayActivityList {
 				source <- homestayActivity.DataId
 			}
@@ -66,7 +64,6 @@ func (l *GoodBossLogic) GoodBoss(req types.GoodBossReq) (*types.GoodBossResp, er
 				writer.Write(userResp.User)
 			}
 		}, func(pipe <-chan interface{}, cancel func(error)) {
-
 			for item := range pipe {
 				var typesHomestayBusiness types.HomestayBusinessBoss
 				_ = copier.Copy(&typesHomestayBusiness, item)
@@ -74,7 +71,10 @@ func (l *GoodBossLogic) GoodBoss(req types.GoodBossReq) (*types.GoodBossResp, er
 				// compute star todo
 				resp = append(resp, typesHomestayBusiness)
 			}
-		})
+		}); err != nil {
+			logx.Errorf("mapreduce failed: %v", err)
+			return nil, err
+		}
 	}
 
 	return &types.GoodBossResp{

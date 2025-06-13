@@ -7,7 +7,6 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
-
 	"time"
 
 	"github.com/Masterminds/squirrel"
@@ -17,7 +16,8 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
-	"looklook/pkg/globalkey"
+
+	"looklook/common/globalkey"
 )
 
 var (
@@ -152,7 +152,6 @@ func (m *defaultThirdPaymentModel) Update(ctx context.Context, session sqlx.Sess
 }
 
 func (m *defaultThirdPaymentModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, newData *ThirdPayment) error {
-
 	oldVersion := newData.Version
 	newData.Version += 1
 
@@ -196,7 +195,6 @@ func (m *defaultThirdPaymentModel) DeleteSoft(ctx context.Context, session sqlx.
 }
 
 func (m *defaultThirdPaymentModel) FindSum(ctx context.Context, builder squirrel.SelectBuilder, field string) (float64, error) {
-
 	if len(field) == 0 {
 		return 0, errors.Wrapf(errors.New("FindSum Least One Field"), "FindSum Least One Field")
 	}
@@ -219,7 +217,6 @@ func (m *defaultThirdPaymentModel) FindSum(ctx context.Context, builder squirrel
 }
 
 func (m *defaultThirdPaymentModel) FindCount(ctx context.Context, builder squirrel.SelectBuilder, field string) (int64, error) {
-
 	if len(field) == 0 {
 		return 0, errors.Wrapf(errors.New("FindCount Least One Field"), "FindCount Least One Field")
 	}
@@ -242,7 +239,6 @@ func (m *defaultThirdPaymentModel) FindCount(ctx context.Context, builder squirr
 }
 
 func (m *defaultThirdPaymentModel) FindAll(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]*ThirdPayment, error) {
-
 	builder = builder.Columns(thirdPaymentRows)
 
 	if orderBy == "" {
@@ -267,7 +263,6 @@ func (m *defaultThirdPaymentModel) FindAll(ctx context.Context, builder squirrel
 }
 
 func (m *defaultThirdPaymentModel) FindPageListByPage(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*ThirdPayment, error) {
-
 	builder = builder.Columns(thirdPaymentRows)
 
 	if orderBy == "" {
@@ -297,7 +292,6 @@ func (m *defaultThirdPaymentModel) FindPageListByPage(ctx context.Context, build
 }
 
 func (m *defaultThirdPaymentModel) FindPageListByPageWithTotal(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*ThirdPayment, int64, error) {
-
 	total, err := m.FindCount(ctx, builder, "id")
 	if err != nil {
 		return nil, 0, err
@@ -332,7 +326,6 @@ func (m *defaultThirdPaymentModel) FindPageListByPageWithTotal(ctx context.Conte
 }
 
 func (m *defaultThirdPaymentModel) FindPageListByIdDESC(ctx context.Context, builder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*ThirdPayment, error) {
-
 	builder = builder.Columns(thirdPaymentRows)
 
 	if preMinId > 0 {
@@ -355,7 +348,6 @@ func (m *defaultThirdPaymentModel) FindPageListByIdDESC(ctx context.Context, bui
 }
 
 func (m *defaultThirdPaymentModel) FindPageListByIdASC(ctx context.Context, builder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*ThirdPayment, error) {
-
 	builder = builder.Columns(thirdPaymentRows)
 
 	if preMaxId > 0 {
@@ -378,16 +370,15 @@ func (m *defaultThirdPaymentModel) FindPageListByIdASC(ctx context.Context, buil
 }
 
 func (m *defaultThirdPaymentModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
-
 	return m.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
 		return fn(ctx, session)
 	})
-
 }
 
 func (m *defaultThirdPaymentModel) SelectBuilder() squirrel.SelectBuilder {
 	return squirrel.Select().From(m.table)
 }
+
 func (m *defaultThirdPaymentModel) Delete(ctx context.Context, session sqlx.Session, id int64) error {
 	data, err := m.FindOne(ctx, id)
 	if err != nil {
@@ -405,9 +396,11 @@ func (m *defaultThirdPaymentModel) Delete(ctx context.Context, session sqlx.Sess
 	}, looklookPaymentThirdPaymentIdKey, looklookPaymentThirdPaymentSnKey)
 	return err
 }
+
 func (m *defaultThirdPaymentModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheLooklookPaymentThirdPaymentIdPrefix, primary)
 }
+
 func (m *defaultThirdPaymentModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
 	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", thirdPaymentRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)

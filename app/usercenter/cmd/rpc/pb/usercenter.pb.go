@@ -7,10 +7,11 @@
 package pb
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -20,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-//model
+// model
 type User struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -179,7 +180,7 @@ func (x *UserAuth) GetAuthKey() string {
 	return ""
 }
 
-//req 、resp
+// req 、resp
 type RegisterReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -980,23 +981,26 @@ func file_usercenter_proto_rawDescGZIP() []byte {
 	return file_usercenter_proto_rawDescData
 }
 
-var file_usercenter_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
-var file_usercenter_proto_goTypes = []interface{}{
-	(*User)(nil),                     // 0: pb.User
-	(*UserAuth)(nil),                 // 1: pb.UserAuth
-	(*RegisterReq)(nil),              // 2: pb.RegisterReq
-	(*RegisterResp)(nil),             // 3: pb.RegisterResp
-	(*LoginReq)(nil),                 // 4: pb.LoginReq
-	(*LoginResp)(nil),                // 5: pb.LoginResp
-	(*GetUserInfoReq)(nil),           // 6: pb.GetUserInfoReq
-	(*GetUserInfoResp)(nil),          // 7: pb.GetUserInfoResp
-	(*GetUserAuthByAuthKeyReq)(nil),  // 8: pb.GetUserAuthByAuthKeyReq
-	(*GetUserAuthByAuthKeyResp)(nil), // 9: pb.GetUserAuthByAuthKeyResp
-	(*GetUserAuthByUserIdReq)(nil),   // 10: pb.GetUserAuthByUserIdReq
-	(*GetUserAuthyUserIdResp)(nil),   // 11: pb.GetUserAuthyUserIdResp
-	(*GenerateTokenReq)(nil),         // 12: pb.GenerateTokenReq
-	(*GenerateTokenResp)(nil),        // 13: pb.GenerateTokenResp
-}
+var (
+	file_usercenter_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+	file_usercenter_proto_goTypes  = []interface{}{
+		(*User)(nil),                     // 0: pb.User
+		(*UserAuth)(nil),                 // 1: pb.UserAuth
+		(*RegisterReq)(nil),              // 2: pb.RegisterReq
+		(*RegisterResp)(nil),             // 3: pb.RegisterResp
+		(*LoginReq)(nil),                 // 4: pb.LoginReq
+		(*LoginResp)(nil),                // 5: pb.LoginResp
+		(*GetUserInfoReq)(nil),           // 6: pb.GetUserInfoReq
+		(*GetUserInfoResp)(nil),          // 7: pb.GetUserInfoResp
+		(*GetUserAuthByAuthKeyReq)(nil),  // 8: pb.GetUserAuthByAuthKeyReq
+		(*GetUserAuthByAuthKeyResp)(nil), // 9: pb.GetUserAuthByAuthKeyResp
+		(*GetUserAuthByUserIdReq)(nil),   // 10: pb.GetUserAuthByUserIdReq
+		(*GetUserAuthyUserIdResp)(nil),   // 11: pb.GetUserAuthyUserIdResp
+		(*GenerateTokenReq)(nil),         // 12: pb.GenerateTokenReq
+		(*GenerateTokenResp)(nil),        // 13: pb.GenerateTokenResp
+	}
+)
+
 var file_usercenter_proto_depIdxs = []int32{
 	0,  // 0: pb.GetUserInfoResp.user:type_name -> pb.User
 	1,  // 1: pb.GetUserAuthByAuthKeyResp.userAuth:type_name -> pb.UserAuth

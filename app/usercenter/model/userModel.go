@@ -56,7 +56,6 @@ func (m *defaultUserModel) DeleteSoft(ctx context.Context, session sqlx.Session,
 }
 
 func (m *defaultUserModel) FindOneByQuery(ctx context.Context, rowBuilder squirrel.SelectBuilder) (*User, error) {
-
 	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	if err != nil {
 		return nil, err
@@ -73,7 +72,6 @@ func (m *defaultUserModel) FindOneByQuery(ctx context.Context, rowBuilder squirr
 }
 
 func (m *defaultUserModel) FindSum(ctx context.Context, sumBuilder squirrel.SelectBuilder) (float64, error) {
-
 	query, values, err := sumBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	if err != nil {
 		return 0, err
@@ -90,7 +88,6 @@ func (m *defaultUserModel) FindSum(ctx context.Context, sumBuilder squirrel.Sele
 }
 
 func (m *defaultUserModel) FindCount(ctx context.Context, countBuilder squirrel.SelectBuilder) (int64, error) {
-
 	query, values, err := countBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	if err != nil {
 		return 0, err
@@ -107,7 +104,6 @@ func (m *defaultUserModel) FindCount(ctx context.Context, countBuilder squirrel.
 }
 
 func (m *defaultUserModel) FindAll(ctx context.Context, rowBuilder squirrel.SelectBuilder, orderBy string) ([]*User, error) {
-
 	if orderBy == "" {
 		rowBuilder = rowBuilder.OrderBy("id DESC")
 	} else {
@@ -130,7 +126,6 @@ func (m *defaultUserModel) FindAll(ctx context.Context, rowBuilder squirrel.Sele
 }
 
 func (m *defaultUserModel) FindPageListByPage(ctx context.Context, rowBuilder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*User, error) {
-
 	if orderBy == "" {
 		rowBuilder = rowBuilder.OrderBy("id DESC")
 	} else {
@@ -158,7 +153,6 @@ func (m *defaultUserModel) FindPageListByPage(ctx context.Context, rowBuilder sq
 }
 
 func (m *defaultUserModel) FindPageListByIdDESC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*User, error) {
-
 	if preMinId > 0 {
 		rowBuilder = rowBuilder.Where(" id < ? ", preMinId)
 	}
@@ -178,9 +172,8 @@ func (m *defaultUserModel) FindPageListByIdDESC(ctx context.Context, rowBuilder 
 	}
 }
 
-//按照id升序分页查询数据，不支持排序
+// 按照id升序分页查询数据，不支持排序
 func (m *defaultUserModel) FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*User, error) {
-
 	if preMaxId > 0 {
 		rowBuilder = rowBuilder.Where(" id > ? ", preMaxId)
 	}
@@ -202,11 +195,9 @@ func (m *defaultUserModel) FindPageListByIdASC(ctx context.Context, rowBuilder s
 
 // export logic
 func (m *defaultUserModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
-
 	return m.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
 		return fn(ctx, session)
 	})
-
 }
 
 // export logic

@@ -56,7 +56,6 @@ func (m *defaultHomestayOrderModel) DeleteSoft(ctx context.Context, session sqlx
 }
 
 func (m *defaultHomestayOrderModel) FindOneByQuery(ctx context.Context, rowBuilder squirrel.SelectBuilder) (*HomestayOrder, error) {
-
 	query, values, err := rowBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	if err != nil {
 		return nil, err
@@ -73,7 +72,6 @@ func (m *defaultHomestayOrderModel) FindOneByQuery(ctx context.Context, rowBuild
 }
 
 func (m *defaultHomestayOrderModel) FindSum(ctx context.Context, sumBuilder squirrel.SelectBuilder) (float64, error) {
-
 	query, values, err := sumBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	if err != nil {
 		return 0, err
@@ -90,7 +88,6 @@ func (m *defaultHomestayOrderModel) FindSum(ctx context.Context, sumBuilder squi
 }
 
 func (m *defaultHomestayOrderModel) FindCount(ctx context.Context, countBuilder squirrel.SelectBuilder) (int64, error) {
-
 	query, values, err := countBuilder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	if err != nil {
 		return 0, err
@@ -107,7 +104,6 @@ func (m *defaultHomestayOrderModel) FindCount(ctx context.Context, countBuilder 
 }
 
 func (m *defaultHomestayOrderModel) FindAll(ctx context.Context, rowBuilder squirrel.SelectBuilder, orderBy string) ([]*HomestayOrder, error) {
-
 	if orderBy == "" {
 		rowBuilder = rowBuilder.OrderBy("id DESC")
 	} else {
@@ -130,7 +126,6 @@ func (m *defaultHomestayOrderModel) FindAll(ctx context.Context, rowBuilder squi
 }
 
 func (m *defaultHomestayOrderModel) FindPageListByPage(ctx context.Context, rowBuilder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*HomestayOrder, error) {
-
 	if orderBy == "" {
 		rowBuilder = rowBuilder.OrderBy("id DESC")
 	} else {
@@ -158,7 +153,6 @@ func (m *defaultHomestayOrderModel) FindPageListByPage(ctx context.Context, rowB
 }
 
 func (m *defaultHomestayOrderModel) FindPageListByIdDESC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*HomestayOrder, error) {
-
 	if preMinId > 0 {
 		rowBuilder = rowBuilder.Where(" id < ? ", preMinId)
 	}
@@ -178,9 +172,8 @@ func (m *defaultHomestayOrderModel) FindPageListByIdDESC(ctx context.Context, ro
 	}
 }
 
-//按照id升序分页查询数据，不支持排序
+// 按照id升序分页查询数据，不支持排序
 func (m *defaultHomestayOrderModel) FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*HomestayOrder, error) {
-
 	if preMaxId > 0 {
 		rowBuilder = rowBuilder.Where(" id > ? ", preMaxId)
 	}
@@ -202,11 +195,9 @@ func (m *defaultHomestayOrderModel) FindPageListByIdASC(ctx context.Context, row
 
 // export logic
 func (m *defaultHomestayOrderModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
-
 	return m.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
 		return fn(ctx, session)
 	})
-
 }
 
 // export logic

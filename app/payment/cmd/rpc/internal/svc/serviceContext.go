@@ -1,9 +1,10 @@
 package svc
 
 import (
-	"github.com/zeromicro/go-queue/kq"
 	"looklook/app/payment/cmd/rpc/internal/config"
 	"looklook/app/payment/model"
+
+	"github.com/zeromicro/go-queue/kq"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
@@ -15,7 +16,6 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.PaymentConfig) *ServiceContext {
-
 	sqlConn := sqlx.NewMysql(c.DB.DataSource)
 
 	return &ServiceContext{

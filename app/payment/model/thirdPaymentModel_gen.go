@@ -136,7 +136,6 @@ func (m *defaultThirdPaymentModel) Update(ctx context.Context, session sqlx.Sess
 }
 
 func (m *defaultThirdPaymentModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, data *ThirdPayment) error {
-
 	oldVersion := data.Version
 	data.Version += 1
 
@@ -187,6 +186,7 @@ func (m *defaultThirdPaymentModel) Delete(ctx context.Context, session sqlx.Sess
 func (m *defaultThirdPaymentModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheLooklookPaymentThirdPaymentIdPrefix, primary)
 }
+
 func (m *defaultThirdPaymentModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
 	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", thirdPaymentRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)

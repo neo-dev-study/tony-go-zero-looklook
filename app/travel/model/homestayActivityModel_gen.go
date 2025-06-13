@@ -103,7 +103,6 @@ func (m *defaultHomestayActivityModel) Update(ctx context.Context, session sqlx.
 }
 
 func (m *defaultHomestayActivityModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, data *HomestayActivity) error {
-
 	oldVersion := data.Version
 	data.Version += 1
 
@@ -147,6 +146,7 @@ func (m *defaultHomestayActivityModel) Delete(ctx context.Context, session sqlx.
 func (m *defaultHomestayActivityModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheLooklookTravelHomestayActivityIdPrefix, primary)
 }
+
 func (m *defaultHomestayActivityModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
 	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", homestayActivityRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)

@@ -2,17 +2,18 @@ package homestay
 
 import (
 	"context"
+
 	"github.com/Masterminds/squirrel"
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/mr"
+
 	"looklook/app/travel/cmd/api/internal/svc"
 	"looklook/app/travel/cmd/api/internal/types"
 	"looklook/app/travel/model"
 	"looklook/common/tool"
 	"looklook/common/xerr"
-
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/mr"
 )
 
 type HomestayListLogic struct {
@@ -30,7 +31,6 @@ func NewHomestayListLogic(ctx context.Context, svcCtx *svc.ServiceContext) Homes
 }
 
 func (l *HomestayListLogic) HomestayList(req types.HomestayListReq) (*types.HomestayListResp, error) {
-
 	whereBuilder := l.svcCtx.HomestayActivityModel.RowBuilder().Where(squirrel.Eq{
 		"row_type":   model.HomestayActivityPreferredType,
 		"row_status": model.HomestayActivityUpStatus,
@@ -42,7 +42,7 @@ func (l *HomestayListLogic) HomestayList(req types.HomestayListReq) (*types.Home
 
 	var resp []types.Homestay
 	if len(homestayActivityList) > 0 { // mapreduce example
-		mr.MapReduceVoid(func(source chan<- interface{}) {
+		if err := mr.MapReduceVoid(func(source chan<- interface{}) {
 			for _, homestayActivity := range homestayActivityList {
 				source <- homestayActivity.DataId
 			}
@@ -60,7 +60,6 @@ func (l *HomestayListLogic) HomestayList(req types.HomestayListReq) (*types.Home
 			}
 			writer.Write(homestay)
 		}, func(pipe <-chan interface{}, cancel func(error)) {
-
 			for item := range pipe {
 				homestay, ok := item.(*model.Homestay)
 				if !ok {
@@ -76,7 +75,10 @@ func (l *HomestayListLogic) HomestayList(req types.HomestayListReq) (*types.Home
 
 				resp = append(resp, tyHomestay)
 			}
-		})
+		}); err != nil {
+			logx.Errorf("mapreduce failed: %v", err)
+			return nil, err
+		}
 	}
 
 	return &types.HomestayListResp{

@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+
 	"github.com/silenceper/wechat/v2/miniprogram/auth"
 
 	"looklook/app/usercenter/cmd/api/internal/svc"
@@ -37,8 +38,7 @@ func NewWxMiniAuthLogic(ctx context.Context, svcCtx *svc.ServiceContext) WxMiniA
 
 // Wechat-Mini auth
 func (l *WxMiniAuthLogic) WxMiniAuth(req types.WXMiniAuthReq) (*types.WXMiniAuthResp, error) {
-
-	//1、Wechat-Mini
+	// 1、Wechat-Mini
 	miniprogram := wechat.NewWechat().GetMiniProgram(&miniConfig.Config{
 		AppID:     l.svcCtx.Config.WxMiniConf.AppId,
 		AppSecret: l.svcCtx.Config.WxMiniConf.Secret,
@@ -48,13 +48,13 @@ func (l *WxMiniAuthLogic) WxMiniAuth(req types.WXMiniAuthReq) (*types.WXMiniAuth
 	if err != nil || authResult.ErrCode != 0 || authResult.OpenID == "" {
 		return nil, errors.Wrapf(ErrWxMiniAuthFailError, "发起授权请求失败 err : %v , code : %s  , authResult : %+v", err, req.Code, authResult)
 	}
-	//2、Parsing WeChat-Mini return data
+	// 2、Parsing WeChat-Mini return data
 	userData, err := miniprogram.GetEncryptor().Decrypt(authResult.SessionKey, req.EncryptedData, req.IV)
 	if err != nil {
 		return nil, errors.Wrapf(ErrWxMiniAuthFailError, "解析数据失败 req : %+v , err: %v , authResult:%+v ", req, err, authResult)
 	}
 
-	//3、bind user or login.
+	// 3、bind user or login.
 	rpcRsp, err := l.svcCtx.UsercenterRpc.GetUserAuthByAuthKey(l.ctx, &usercenter.GetUserAuthByAuthKeyReq{
 		AuthType: usercenterModel.UserAuthTypeSmallWX,
 		AuthKey:  authResult.OpenID,
@@ -63,11 +63,10 @@ func (l *WxMiniAuthLogic) WxMiniAuth(req types.WXMiniAuthReq) (*types.WXMiniAuth
 		return nil, errors.Wrapf(ErrWxMiniAuthFailError, "rpc call userAuthByAuthKey err : %v , authResult : %+v", err, authResult)
 	}
 	if rpcRsp.UserAuth == nil || rpcRsp.UserAuth.Id == 0 {
-		//bind user.
+		// bind user.
 
-		//Wechat-Mini Decrypted data
+		// Wechat-Mini Decrypted data
 		return l.WxLogin(userData.PhoneNumber, authResult)
-
 	} else {
 		return l.getTokenByUserId(rpcRsp.UserAuth.UserId)
 	}

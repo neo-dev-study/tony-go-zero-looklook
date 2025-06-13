@@ -30,8 +30,7 @@ func NewUserHomestayOrderListLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *UserHomestayOrderListLogic) UserHomestayOrderList(req types.UserHomestayOrderListReq) (*types.UserHomestayOrderListResp, error) {
-
-	userId := ctxdata.GetUidFromCtx(l.ctx) //get login user id
+	userId := ctxdata.GetUidFromCtx(l.ctx) // get login user id
 
 	resp, err := l.svcCtx.OrderRpc.UserHomestayOrderList(l.ctx, &order.UserHomestayOrderListReq{
 		UserId:      userId,
@@ -46,7 +45,6 @@ func (l *UserHomestayOrderListLogic) UserHomestayOrderList(req types.UserHomesta
 	var typesUserHomestayOrderList []types.UserHomestayOrderListView
 
 	if len(resp.List) > 0 {
-
 		for _, homestayOrder := range resp.List {
 
 			var typeHomestayOrder types.UserHomestayOrderListView

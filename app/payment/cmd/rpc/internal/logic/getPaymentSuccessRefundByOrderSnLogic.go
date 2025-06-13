@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+
 	"looklook/app/payment/cmd/rpc/internal/svc"
 	"looklook/app/payment/cmd/rpc/pb"
 	"looklook/app/payment/model"
@@ -27,12 +28,11 @@ func NewGetPaymentSuccessRefundByOrderSnLogic(ctx context.Context, svcCtx *svc.S
 }
 
 func (l *GetPaymentSuccessRefundByOrderSnLogic) GetPaymentSuccessRefundByOrderSn(in *pb.GetPaymentSuccessRefundByOrderSnReq) (*pb.GetPaymentSuccessRefundByOrderSnResp, error) {
-
-	whereBuilder:=l.svcCtx.ThirdPaymentModel.RowBuilder().Where(
-		"order_sn = ? and (trade_state = ? or trade_state = ? )" ,
+	whereBuilder := l.svcCtx.ThirdPaymentModel.RowBuilder().Where(
+		"order_sn = ? and (trade_state = ? or trade_state = ? )",
 		in.OrderSn, model.ThirdPaymentPayTradeStateSuccess, model.ThirdPaymentPayTradeStateRefund,
 	)
-	thirdPayment, err := l.svcCtx.ThirdPaymentModel.FindOneByQuery(l.ctx,whereBuilder)
+	thirdPayment, err := l.svcCtx.ThirdPaymentModel.FindOneByQuery(l.ctx, whereBuilder)
 	if err != nil && err != model.ErrNotFound {
 		return nil, errors.Wrapf(xerr.NewErrMsg("get payment record fail"), "get payment record fail FindOneByQuery  err : %v , orderSn:%s", err, in.OrderSn)
 	}

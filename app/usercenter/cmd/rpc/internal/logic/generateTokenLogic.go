@@ -2,13 +2,16 @@ package logic
 
 import (
 	"context"
-	"github.com/pkg/errors"
-	"looklook/common/ctxdata"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"looklook/common/ctxdata"
+
+	"github.com/pkg/errors"
+
 	"looklook/app/usercenter/cmd/rpc/internal/svc"
 	"looklook/app/usercenter/cmd/rpc/pb"
+
+	"github.com/golang-jwt/jwt/v4"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -43,7 +46,6 @@ func (l *GenerateTokenLogic) GenerateToken(in *pb.GenerateTokenReq) (*pb.Generat
 }
 
 func (l *GenerateTokenLogic) getJwtToken(secretKey string, iat, seconds, userId int64) (string, error) {
-
 	claims := make(jwt.MapClaims)
 	claims["exp"] = iat + seconds
 	claims["iat"] = iat

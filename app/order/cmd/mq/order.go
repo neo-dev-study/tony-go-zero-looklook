@@ -2,10 +2,12 @@ package main
 
 import (
 	"flag"
-	"github.com/zeromicro/go-zero/core/logx"
+	"os"
+
 	"looklook/app/order/cmd/mq/internal/config"
 	"looklook/app/order/cmd/mq/internal/listen"
-	"os"
+
+	"github.com/zeromicro/go-zero/core/logx"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -33,5 +35,4 @@ func main() {
 	}
 
 	serviceGroup.Start()
-
 }

@@ -104,7 +104,6 @@ func (m *defaultHomestayCommentModel) Update(ctx context.Context, session sqlx.S
 }
 
 func (m *defaultHomestayCommentModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, data *HomestayComment) error {
-
 	oldVersion := data.Version
 	data.Version += 1
 
@@ -148,6 +147,7 @@ func (m *defaultHomestayCommentModel) Delete(ctx context.Context, session sqlx.S
 func (m *defaultHomestayCommentModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheLooklookTravelHomestayCommentIdPrefix, primary)
 }
+
 func (m *defaultHomestayCommentModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
 	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", homestayCommentRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)
