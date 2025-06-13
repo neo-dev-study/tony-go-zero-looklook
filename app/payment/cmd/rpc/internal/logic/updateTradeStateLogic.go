@@ -5,15 +5,14 @@ import (
 	"encoding/json"
 	"time"
 
-	"looklook/common/kqueue"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
 
 	"looklook/app/payment/cmd/rpc/internal/svc"
 	"looklook/app/payment/cmd/rpc/pb"
 	"looklook/app/payment/model"
+	"looklook/common/kqueue"
 	"looklook/common/xerr"
-
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type UpdateTradeStateLogic struct {
@@ -87,5 +86,5 @@ func (l *UpdateTradeStateLogic) pubKqPaySuccess(orderSn string, payStatus int64)
 		return errors.Wrapf(xerr.NewErrMsg("kq UpdateTradeStateLogic pushKqPaySuccess task marshal error "), "kq UpdateTradeStateLogic pushKqPaySuccess task marshal error  , v : %+v", m)
 	}
 
-	return l.svcCtx.KqueuePaymentUpdatePayStatusClient.Push(string(body))
+	return l.svcCtx.KqueuePaymentUpdatePayStatusClient.Push(context.Background(), string(body))
 }
