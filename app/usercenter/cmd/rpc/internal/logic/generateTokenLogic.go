@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"github.com/pkg/errors"
-	"looklook/pkg/ctxdata"
+	"looklook/common/ctxdata"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"

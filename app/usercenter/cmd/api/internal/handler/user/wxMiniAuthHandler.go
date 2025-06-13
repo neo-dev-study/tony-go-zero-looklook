@@ -6,7 +6,7 @@ import (
 	"looklook/app/usercenter/cmd/api/internal/logic/user"
 	"looklook/app/usercenter/cmd/api/internal/svc"
 	"looklook/app/usercenter/cmd/api/internal/types"
-	"looklook/pkg/result"
+	"looklook/common/result"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
 )

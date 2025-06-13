@@ -7,16 +7,15 @@ import (
 	"looklook/app/order/cmd/rpc/order"
 	"looklook/app/order/model"
 	paymentModel "looklook/app/payment/model"
-	"looklook/pkg/kqueue"
-	"looklook/pkg/xerr"
+	"looklook/common/kqueue"
+	"looklook/common/xerr"
 
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-/*
-*
-Listening to the payment flow status change notification message queue
+/**
+	Listening to the payment flow status change notification message queue
 */
 type PaymentUpdateStatusMq struct {
 	ctx    context.Context
@@ -63,7 +62,7 @@ func (l *PaymentUpdateStatusMq) execService(message kqueue.ThirdPaymentUpdatePay
 	return nil
 }
 
-// Get order status based on payment status.
+//Get order status based on payment status.
 func (l *PaymentUpdateStatusMq) getOrderTradeStateByPaymentTradeState(thirdPaymentPayStatus int64) int64 {
 
 	switch thirdPaymentPayStatus {

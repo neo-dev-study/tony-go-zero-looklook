@@ -3,12 +3,13 @@ package user
 import (
 	"context"
 	"fmt"
+	"github.com/silenceper/wechat/v2/miniprogram/auth"
 
 	"looklook/app/usercenter/cmd/api/internal/svc"
 	"looklook/app/usercenter/cmd/api/internal/types"
 	"looklook/app/usercenter/cmd/rpc/usercenter"
 	usercenterModel "looklook/app/usercenter/model"
-	"looklook/pkg/xerr"
+	"looklook/common/xerr"
 
 	"github.com/pkg/errors"
 	wechat "github.com/silenceper/wechat/v2"
@@ -54,7 +55,6 @@ func (l *WxMiniAuthLogic) WxMiniAuth(req types.WXMiniAuthReq) (*types.WXMiniAuth
 	}
 
 	//3、bind user or login.
-	var userId int64
 	rpcRsp, err := l.svcCtx.UsercenterRpc.GetUserAuthByAuthKey(l.ctx, &usercenter.GetUserAuthByAuthKeyReq{
 		AuthType: usercenterModel.UserAuthTypeSmallWX,
 		AuthKey:  authResult.OpenID,
@@ -66,36 +66,43 @@ func (l *WxMiniAuthLogic) WxMiniAuth(req types.WXMiniAuthReq) (*types.WXMiniAuth
 		//bind user.
 
 		//Wechat-Mini Decrypted data
-		mobile := userData.PhoneNumber
-		nickName := fmt.Sprintf("LookLook%s", mobile[7:])
-		registerRsp, err := l.svcCtx.UsercenterRpc.Register(l.ctx, &usercenter.RegisterReq{
-			AuthKey:  authResult.OpenID,
-			AuthType: usercenterModel.UserAuthTypeSmallWX,
-			Mobile:   mobile,
-			Nickname: nickName,
-		})
-		if err != nil {
-			return nil, errors.Wrapf(ErrWxMiniAuthFailError, "UsercenterRpc.Register err :%v, authResult : %+v", err, authResult)
-		}
-
-		return &types.WXMiniAuthResp{
-			AccessToken:  registerRsp.AccessToken,
-			AccessExpire: registerRsp.AccessExpire,
-			RefreshAfter: registerRsp.RefreshAfter,
-		}, nil
+		return l.WxLogin(userData.PhoneNumber, authResult)
 
 	} else {
-		userId = rpcRsp.UserAuth.UserId
-		tokenResp, err := l.svcCtx.UsercenterRpc.GenerateToken(l.ctx, &usercenter.GenerateTokenReq{
-			UserId: userId,
-		})
-		if err != nil {
-			return nil, errors.Wrapf(ErrWxMiniAuthFailError, "usercenterRpc.GenerateToken err :%v, userId : %d", err, userId)
-		}
-		return &types.WXMiniAuthResp{
-			AccessToken:  tokenResp.AccessToken,
-			AccessExpire: tokenResp.AccessExpire,
-			RefreshAfter: tokenResp.RefreshAfter,
-		}, nil
+		return l.getTokenByUserId(rpcRsp.UserAuth.UserId)
 	}
+}
+
+func (l *WxMiniAuthLogic) WxLogin(phoneNumber string, authResult auth.ResCode2Session) (*types.WXMiniAuthResp, error) {
+	mobile := phoneNumber
+	nickName := fmt.Sprintf("LookLook%s", mobile[7:])
+	registerResp, err := l.svcCtx.UsercenterRpc.Register(l.ctx, &usercenter.RegisterReq{
+		AuthKey:  authResult.OpenID,
+		AuthType: usercenterModel.UserAuthTypeSmallWX,
+		Mobile:   mobile,
+		Nickname: nickName,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(ErrWxMiniAuthFailError, "UsercenterRpc.Register err :%v, authResult : %+v", err, authResult)
+	}
+	resp := &types.WXMiniAuthResp{
+		AccessToken:  registerResp.AccessToken,
+		AccessExpire: registerResp.AccessExpire,
+		RefreshAfter: registerResp.RefreshAfter,
+	}
+	return resp, nil
+}
+
+func (l *WxMiniAuthLogic) getTokenByUserId(userId int64) (*types.WXMiniAuthResp, error) {
+	tokenResp, err := l.svcCtx.UsercenterRpc.GenerateToken(l.ctx, &usercenter.GenerateTokenReq{
+		UserId: userId,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(ErrWxMiniAuthFailError, "usercenterRpc.GenerateToken err :%v, userId : %d", err, userId)
+	}
+	return &types.WXMiniAuthResp{
+		AccessToken:  tokenResp.AccessToken,
+		AccessExpire: tokenResp.AccessExpire,
+		RefreshAfter: tokenResp.RefreshAfter,
+	}, nil
 }

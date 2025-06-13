@@ -2,8 +2,10 @@ package main
 
 import (
 	"flag"
+	"github.com/zeromicro/go-zero/core/logx"
 	"looklook/app/order/cmd/mq/internal/config"
 	"looklook/app/order/cmd/mq/internal/listen"
+	"os"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -19,7 +21,8 @@ func main() {
 
 	// log、prometheus、trace、metricsUrl.
 	if err := c.SetUp(); err != nil {
-		panic(err)
+		logx.Errorf("setUp services err:%+v", err)
+		os.Exit(1)
 	}
 
 	serviceGroup := service.NewServiceGroup()

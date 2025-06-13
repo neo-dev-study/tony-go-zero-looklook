@@ -23,10 +23,9 @@ func main() {
 
 	// log、prometheus、trace、metricsUrl
 	if err := c.SetUp(); err != nil {
-		panic(err)
+		logx.Errorf("setUp services err:%+v", err)
+		os.Exit(1)
 	}
-
-	//logx.DisableStat()
 
 	svcContext := svc.NewServiceContext(c)
 	ctx := context.Background()

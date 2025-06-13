@@ -10,8 +10,8 @@ import (
 	"looklook/app/payment/model"
 	"looklook/app/usercenter/cmd/rpc/usercenter"
 	usercenterModel "looklook/app/usercenter/model"
-	"looklook/pkg/ctxdata"
-	"looklook/pkg/xerr"
+	"looklook/common/ctxdata"
+	"looklook/common/xerr"
 
 	"github.com/pkg/errors"
 	"github.com/wechatpay-apiv3/wechatpay-go/core"
@@ -54,7 +54,7 @@ func (l *ThirdPaymentwxPayLogic) ThirdPaymentwxPay(req types.ThirdPaymentWxPayRe
 		return nil, errors.Wrapf(xerr.NewErrMsg("Payment for this business type is not supported"), "Payment for this business type is not supported req: %+v", req)
 	}
 
-	// Create WechatPay pre-processing orders
+	// Create microsoft pre-processing orders
 	wechatPrepayRsp, err := l.createWxPrePayOrder(req.ServiceType, req.OrderSn, totalPrice, description)
 	if err != nil {
 		return nil, err

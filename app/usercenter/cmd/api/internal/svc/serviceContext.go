@@ -9,13 +9,13 @@ import (
 )
 
 type ServiceContext struct {
-	Config        config.Config
+	Config        config.UsercenterConfig
 	UsercenterRpc usercenter.Usercenter
 
 	SetUidToCtxMiddleware rest.Middleware
 }
 
-func NewServiceContext(c config.Config) *ServiceContext {
+func NewServiceContext(c config.UsercenterConfig) *ServiceContext {
 
 	return &ServiceContext{
 		Config:        c,

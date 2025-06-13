@@ -10,14 +10,14 @@ import (
 )
 
 type ServiceContext struct {
-	Config config.Config
+	Config config.OrderConfig
 
 	OrderRpc   order.Order
 	PaymentRpc payment.Payment
 	TravelRpc  travel.Travel
 }
 
-func NewServiceContext(c config.Config) *ServiceContext {
+func NewServiceContext(c config.OrderConfig) *ServiceContext {
 	return &ServiceContext{
 		Config: c,
 

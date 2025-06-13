@@ -5,7 +5,7 @@ import (
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
-type Config struct {
+type OrderConfig struct {
 	zrpc.RpcServerConf
 
 	DB struct {

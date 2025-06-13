@@ -5,7 +5,7 @@ import (
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
-type Config struct {
+type UsercenterConfig struct {
 	zrpc.RpcServerConf
 	JwtAuth struct {
 		AccessSecret string

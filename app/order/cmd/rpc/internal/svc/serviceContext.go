@@ -11,7 +11,7 @@ import (
 )
 
 type ServiceContext struct {
-	Config config.Config
+	Config      config.OrderConfig
 	AsynqClient *asynq.Client
 
 	TravelRpc travel.Travel
@@ -19,10 +19,10 @@ type ServiceContext struct {
 	HomestayOrderModel model.HomestayOrderModel
 }
 
-func NewServiceContext(c config.Config) *ServiceContext {
+func NewServiceContext(c config.OrderConfig) *ServiceContext {
 	return &ServiceContext{
-		Config: c,
-		AsynqClient:newAsynqClient(c),
+		Config:      c,
+		AsynqClient: newAsynqClient(c),
 
 		TravelRpc: travel.NewTravel(zrpc.MustNewClient(c.TravelRpcConf)),
 

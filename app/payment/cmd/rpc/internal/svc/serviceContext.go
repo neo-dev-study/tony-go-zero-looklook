@@ -9,18 +9,18 @@ import (
 )
 
 type ServiceContext struct {
-	Config            config.Config
-	ThirdPaymentModel model.ThirdPaymentModel
+	Config                             config.PaymentConfig
+	ThirdPaymentModel                  model.ThirdPaymentModel
 	KqueuePaymentUpdatePayStatusClient *kq.Pusher
 }
 
-func NewServiceContext(c config.Config) *ServiceContext {
+func NewServiceContext(c config.PaymentConfig) *ServiceContext {
 
 	sqlConn := sqlx.NewMysql(c.DB.DataSource)
 
 	return &ServiceContext{
-		Config: c,
-		ThirdPaymentModel: model.NewThirdPaymentModel(sqlConn, c.Cache),
-		KqueuePaymentUpdatePayStatusClient: kq.NewPusher(c.KqPaymentUpdatePayStatusConf.Brokers,c.KqPaymentUpdatePayStatusConf.Topic),
+		Config:                             c,
+		ThirdPaymentModel:                  model.NewThirdPaymentModel(sqlConn, c.Cache),
+		KqueuePaymentUpdatePayStatusClient: kq.NewPusher(c.KqPaymentUpdatePayStatusConf.Brokers, c.KqPaymentUpdatePayStatusConf.Topic),
 	}
 }

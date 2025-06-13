@@ -3,7 +3,7 @@ package svc
 import (
 	"context"
 	"looklook/app/payment/cmd/api/internal/config"
-	"looklook/pkg/xerr"
+	"looklook/common/xerr"
 
 	"github.com/pkg/errors"
 	"github.com/wechatpay-apiv3/wechatpay-go/core"
@@ -11,7 +11,7 @@ import (
 	"github.com/wechatpay-apiv3/wechatpay-go/utils"
 )
 
-func NewWxPayClientV3(c config.Config) (*core.Client, error) {
+func NewWxPayClientV3(c config.PaymentConfig) (*core.Client, error) {
 
 	mchPrivateKey, err := utils.LoadPrivateKey(c.WxPayConf.PrivateKey)
 	if err != nil {

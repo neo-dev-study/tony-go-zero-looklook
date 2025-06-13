@@ -2,7 +2,7 @@ package uniqueid
 
 import (
 	"fmt"
-	"looklook/pkg/tool"
+	"looklook/common/tool"
 	"time"
 )
 

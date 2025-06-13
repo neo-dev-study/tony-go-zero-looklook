@@ -16,7 +16,7 @@ func main() {
 
 	flag.Parse()
 
-	var c config.Config
+	var c config.OrderConfig
 	conf.MustLoad(*configFile, &c)
 
 	ctx := svc.NewServiceContext(c)

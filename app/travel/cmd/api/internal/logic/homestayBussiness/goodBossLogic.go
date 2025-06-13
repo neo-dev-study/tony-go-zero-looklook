@@ -8,7 +8,7 @@ import (
 	"looklook/app/travel/cmd/api/internal/types"
 	"looklook/app/travel/model"
 	"looklook/app/usercenter/cmd/rpc/usercenter"
-	"looklook/pkg/xerr"
+	"looklook/common/xerr"
 
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
@@ -32,7 +32,7 @@ func NewGoodBossLogic(ctx context.Context, svcCtx *svc.ServiceContext) GoodBossL
 
 func (l *GoodBossLogic) GoodBoss(req types.GoodBossReq) (*types.GoodBossResp, error) {
 
-	whereBuilder := l.svcCtx.HomestayActivityModel.SelectBuilder().Where(squirrel.Eq{
+	whereBuilder := l.svcCtx.HomestayActivityModel.RowBuilder().Where(squirrel.Eq{
 		"row_type":   model.HomestayActivityGoodBusiType,
 		"row_status": model.HomestayActivityUpStatus,
 	})
@@ -48,8 +48,12 @@ func (l *GoodBossLogic) GoodBoss(req types.GoodBossReq) (*types.GoodBossResp, er
 			for _, homestayActivity := range homestayActivityList {
 				source <- homestayActivity.DataId
 			}
-		}, func(item interface{}, writer mr.Writer[*usercenter.User], cancel func(error)) {
-			id := item.(int64)
+		}, func(item interface{}, writer mr.Writer, cancel func(error)) {
+			id, ok := item.(int64)
+			if !ok {
+				logx.WithContext(l.ctx).Errorf("id %d assert err", id)
+				return
+			}
 
 			userResp, err := l.svcCtx.UsercenterRpc.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{
 				Id: id,
@@ -61,13 +65,8 @@ func (l *GoodBossLogic) GoodBoss(req types.GoodBossReq) (*types.GoodBossResp, er
 			if userResp.User != nil && userResp.User.Id > 0 {
 				writer.Write(userResp.User)
 			}
-		}, func(pipe <-chan *usercenter.User, cancel func(error)) {
+		}, func(pipe <-chan interface{}, cancel func(error)) {
 
-			// 【!!notice!!】Why not use copier to make a copy of the whole list here?
-			// 【!!重要!!】这里为什么不使用copier去对整个list进行拷贝？
-
-			// answer : copier This library is essentially the use of reflection implementation, in our online practice, the copy of large slices will take up a lot of cpu, serious performance consumption, if you can manually assign the value as much as possible manually, would like to use the copier is highly recommended only copy a single object is not a great impact
-			// 答：copier 这个库本质上是使用反射实现的，在我们线上实践中，对大切片拷贝会占用大量的cpu，严重消耗性能，如果能手动赋值尽量手动，想使用copier强烈建议只拷贝单个对象影响不是很大
 			for item := range pipe {
 				var typesHomestayBusiness types.HomestayBusinessBoss
 				_ = copier.Copy(&typesHomestayBusiness, item)

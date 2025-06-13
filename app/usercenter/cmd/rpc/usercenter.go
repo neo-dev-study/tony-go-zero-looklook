@@ -10,7 +10,7 @@ import (
 	"looklook/app/usercenter/cmd/rpc/internal/server"
 	"looklook/app/usercenter/cmd/rpc/internal/svc"
 	"looklook/app/usercenter/cmd/rpc/pb"
-	"looklook/pkg/interceptor/rpcserver"
+	"looklook/common/interceptor/rpcserver"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -22,7 +22,7 @@ var configFile = flag.String("f", "etc/usercenter.yaml", "the config file")
 func main() {
 	flag.Parse()
 
-	var c config.Config
+	var c config.UsercenterConfig
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
 	srv := server.NewUsercenterServer(ctx)

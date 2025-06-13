@@ -1,4 +1,6 @@
 Name: order-mq
+Host: 0.0.0.0
+Port: 3001
 Mode: dev
 
 #监控
@@ -10,7 +12,7 @@ Prometheus:
 #链路追踪
 Telemetry:
   Name: order-mq
-  Endpoint: http://jaeger:14268/api/traces
+  Endpoint: http://192.168.222.19:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
 
@@ -19,15 +21,17 @@ Log:
   Level: error
 
 Redis:
-  Host: redis:6379
+  Host: 192.168.222.33:6379
   Type: node
-  Pass: G62m50oigInC30sf
+  Pass: password
 
 #kq
 PaymentUpdateStatusConf:
   Name: PaymentUpdateStatus
   Brokers:
-    - kafka:9092
+    - 192.168.222.18:9092
+    - 192.168.222.40:9092
+    - 192.168.222.11:9092
   Group: payment-update-paystatus-group
   Topic: payment-update-paystatus-topic
   Offset: first
@@ -36,11 +40,7 @@ PaymentUpdateStatusConf:
 
 #rpc
 OrderRpcConf:
-  Endpoints:
-    - 127.0.0.1:2001
-  NonBlock: true
+  Target: k8s://go-zero-looklook/order-rpc-svc:2001
 
 UsercenterRpcConf:
-  Endpoints:
-    - 127.0.0.1:2004
-  NonBlock: true
+  Target: k8s://go-zero-looklook/usercenter-rpc-svc:2004

@@ -5,7 +5,7 @@ import (
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
-type Config struct {
+type OrderConfig struct {
 	rest.RestConf
 	JwtAuth struct {
 		AccessSecret string

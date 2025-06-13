@@ -16,7 +16,7 @@ Prometheus:
 #链路追踪
 Telemetry:
   Name: usercenter-api
-  Endpoint: http://jaeger:14268/api/traces
+  Endpoint: http://192.168.222.19:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
 
@@ -31,7 +31,5 @@ WxMiniConf:
 
 #rpc service
 UsercenterRpcConf:
-  Endpoints:
-    - 127.0.0.1:2004
-  NonBlock: true
+  Target: k8s://go-zero-looklook/usercenter-rpc-svc:2004
 

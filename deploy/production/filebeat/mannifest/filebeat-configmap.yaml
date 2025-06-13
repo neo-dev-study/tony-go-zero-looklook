@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-config
+  namespace: go-zero-looklook
+  labels:
+    app: filebeat
+data:
+  filebeat.yml: |-
+    filebeat.inputs:
+    - type: container
+      paths:
+        - /var/log/containers/*.log
+      processors:
+        - add_kubernetes_metadata:
+            host: ${NODE_NAME}
+            matchers:
+            - logs_path:
+                logs_path: "/var/log/containers/"
+        - add_cloud_metadata: ~
+        - add_docker_metadata: ~
+
+    output.kafka:
+      enabled: true
+      hosts: ["192.168.222.18:9092","192.168.222.40:9092","192.168.222.11:9092"]
+      topic: "looklook-log"
+      partition.hash:
+        reachable_only: true
+      compression: gzip
+      max_message_bytes: 1000000
+      required_acks: 1
+
+    filebeat.config:
+      modules:
+        path: ${path.config}/modules.d/*.yml
+        reload.enabled: false

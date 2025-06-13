@@ -14,7 +14,7 @@ var configFile = flag.String("f", "etc/usercenter.yaml", "the config file")
 
 func main() {
 	flag.Parse()
-	var c config.Config
+	var c config.UsercenterConfig
 	conf.MustLoad(*configFile, &c, conf.UseEnv())
 
 	ctx := svc.NewServiceContext(c)

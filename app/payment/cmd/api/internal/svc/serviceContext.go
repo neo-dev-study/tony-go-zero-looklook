@@ -11,7 +11,7 @@ import (
 )
 
 type ServiceContext struct {
-	Config config.Config
+	Config config.PaymentConfig
 
 	WxPayClient *core.Client
 
@@ -20,7 +20,7 @@ type ServiceContext struct {
 	UsercenterRpc usercenter.Usercenter
 }
 
-func NewServiceContext(c config.Config) *ServiceContext {
+func NewServiceContext(c config.PaymentConfig) *ServiceContext {
 
 	return &ServiceContext{
 		Config: c,

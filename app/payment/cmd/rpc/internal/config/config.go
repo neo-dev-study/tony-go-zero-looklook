@@ -5,12 +5,12 @@ import (
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
-type Config struct {
+type PaymentConfig struct {
 	zrpc.RpcServerConf
 
 	DB struct {
 		DataSource string
 	}
-	Cache cache.CacheConf
+	Cache                        cache.CacheConf
 	KqPaymentUpdatePayStatusConf KqConfig
 }

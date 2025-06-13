@@ -1,9 +1,6 @@
-version: '3'
-
 ######## app下api+rpc ,  Before starting this project, start the environment that the project depends on docker-compose-env.yml #######
 
 services:
-
   #前端网关nginx-gateay (只代理looklook，admin-api不在这里做代理)
   # Front-end gateway nginx-gateway (Only agent looklook，admin-api Do not be an agent here)
   nginx-gateway:
@@ -16,7 +13,7 @@ services:
     ports:
       - 8888:8081
     volumes:
-      - ./deploy/nginx/conf.d:/etc/nginx/conf.d
+      - ./deploy/development/nginx/conf.d:/etc/nginx/conf.d
       - ./data/nginx/log:/var/log/nginx
     networks:
       - looklook_net
@@ -25,9 +22,8 @@ services:
 
   #前端api + 业务rpc - Front-end API + business RPC
   looklook:
-    # docker-hub : https://hub.docker.com/r/lyumikael/gomodd
-    # dockerfile: https://github.com/Mikaelemmmm/gomodd , If you are macOs m1\m2 use dockerfile yourself to build the image
-    image: lyumikael/gomodd:v1.22.1
+    # image: lyumikael/gomodd:v1.0.0 # if you "macOs intel" or "linux amd"
+    image: lyumikael/go-modd-env:v1.0.0 # if you macOs m1
     container_name: looklook
     environment:
       # 时区上海 - Timezone Shanghai
@@ -43,8 +39,8 @@ services:
 
 networks:
   looklook_net:
+    external: true
     driver: bridge
     ipam:
       config:
         - subnet: 172.20.0.0/16
-

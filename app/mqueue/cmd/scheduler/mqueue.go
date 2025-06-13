@@ -21,10 +21,10 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	logx.DisableStat()
-
 	// log、prometheus、trace、metricsUrl.
 	if err := c.SetUp(); err != nil {
-		panic(err)
+		logx.Errorf("setUp services err:%+v", err)
+		os.Exit(1)
 	}
 
 	svcContext := svc.NewServiceContext(c)

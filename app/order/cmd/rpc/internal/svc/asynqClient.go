@@ -6,6 +6,6 @@ import (
 )
 
 //create asynq client.
-func newAsynqClient(c config.Config) *asynq.Client {
+func newAsynqClient(c config.OrderConfig) *asynq.Client {
 	return asynq.NewClient(asynq.RedisClientOpt{Addr: c.Redis.Host, Password: c.Redis.Pass})
 }

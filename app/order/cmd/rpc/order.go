@@ -8,7 +8,7 @@ import (
 	"looklook/app/order/cmd/rpc/internal/server"
 	"looklook/app/order/cmd/rpc/internal/svc"
 	"looklook/app/order/cmd/rpc/pb"
-	"looklook/pkg/interceptor/rpcserver"
+	"looklook/common/interceptor/rpcserver"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -22,7 +22,7 @@ var configFile = flag.String("f", "etc/order.yaml", "the config file")
 func main() {
 	flag.Parse()
 
-	var c config.Config
+	var c config.OrderConfig
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
 	srv := server.NewOrderServer(ctx)
