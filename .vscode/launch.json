@@ -11,7 +11,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/usercenter/cmd/rpc/usercenter.go",
             "args": [
-                "app/usercenter/cmd/rpc/etc/usercenter-local.yaml"
+                "-f",
+                "etc/usercenter-local.yaml"
             ]
         },
         {
@@ -21,7 +22,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/usercenter/cmd/api/usercenter.go",
             "args": [
-                "app/usercenter/cmd/api/etc/usercenter-local.yaml"
+                "-f",
+                "etc/usercenter-local.yaml"
             ]
         },
         {
@@ -31,7 +33,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/travel/cmd/rpc/travel.go",
             "args": [
-                "app/travel/cmd/rpc/etc/travel-local.yaml"
+                "-f",
+                "etc/travel-local.yaml"
             ]
         },
         {
@@ -41,7 +44,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/travel/cmd/api/travel.go",
             "args": [
-                "app/travel/cmd/api/etc/travel-local.yaml"
+                "-f",
+                "etc/travel-local.yaml"
             ]
         },
         {
@@ -51,7 +55,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/payment/cmd/rpc/payment.go",
             "args": [
-                "app/payment/cmd/rpc/etc/payment-local.yaml"
+                "-f",
+                "etc/payment-local.yaml"
             ]
         },
         {
@@ -61,7 +66,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/payment/cmd/api/payment.go",
             "args": [
-                "app/payment/cmd/api/etc/payment-local.yaml"
+                "-f",
+                "etc/payment-local.yaml"
             ]
         },
         {
@@ -71,7 +77,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/order/cmd/rpc/order.go",
             "args": [
-                "app/order/cmd/rpc/etc/order-local.yaml"
+                "-f",
+                "etc/order-local.yaml"
             ]
         },
         {
@@ -81,7 +88,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/order/cmd/api/order.go",
             "args": [
-                "app/order/cmd/api/etc/order-local.yaml"
+                "-f",
+                "etc/order-local.yaml"
             ]
         },
         {
@@ -91,7 +99,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/order/cmd/mq/order.go",
             "args": [
-                "app/order/cmd/mq/etc/order-local.yaml"
+                "-f",
+                "etc/order-local.yaml"
             ]
         },
         {
@@ -101,7 +110,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/mqueue/cmd/scheduler/mqueue.go",
             "args": [
-                "app/mqueue/cmd/scheduler/etc/scheduler-local.yaml"
+                "-f",
+                "etc/scheduler-local.yaml"
             ]
         },
         {
@@ -111,7 +121,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/mqueue/cmd/job/mqueue.go",
             "args": [
-                "app/mqueue/cmd/job/etc/mqueue-local.yaml"
+                "-f",
+                "etc/mqueue-local.yaml"
             ]
         },
     ],
