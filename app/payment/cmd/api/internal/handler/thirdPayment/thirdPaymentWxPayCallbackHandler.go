@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"looklook/app/payment/cmd/api/internal/logic/thirdPayment"
 	"looklook/app/payment/cmd/api/internal/svc"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 func ThirdPaymentWxPayCallbackHandler(ctx *svc.ServiceContext) http.HandlerFunc {

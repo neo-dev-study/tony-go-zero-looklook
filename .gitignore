@@ -1,6 +1,6 @@
-# idea
-.idea
-.idea/
+# # idea
+# .idea
+# .idea/
 *.iml
 .DS_Store
 **/.DS_Store
@@ -13,8 +13,6 @@ data/*
 # gitlab ci
 .cache
 
-#vscode
-.vscode
-.vscode/
-
-
+# #vscode
+# .vscode
+# .vscode/

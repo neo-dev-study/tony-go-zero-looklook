@@ -4,15 +4,15 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"looklook/app/order/cmd/mq/internal/svc"
 	"looklook/app/order/cmd/rpc/order"
 	"looklook/app/order/model"
 	paymentModel "looklook/app/payment/model"
 	"looklook/common/kqueue"
 	"looklook/common/xerr"
+
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 /*
@@ -32,7 +32,7 @@ func NewPaymentUpdateStatusMq(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-func (l *PaymentUpdateStatusMq) Consume(ctx context.Context, _, val string) error {
+func (l *PaymentUpdateStatusMq) Consume(_, val string) error {
 	var message kqueue.ThirdPaymentUpdatePayStatusNotifyMessage
 	if err := json.Unmarshal([]byte(val), &message); err != nil {
 		logx.WithContext(l.ctx).Error("PaymentUpdateStatusMq->Consume Unmarshal err : %v , val : %s", err, val)

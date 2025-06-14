@@ -42,36 +42,36 @@ func (l *GoodBossLogic) GoodBoss(req types.GoodBossReq) (*types.GoodBossResp, er
 
 	var resp []types.HomestayBusinessBoss
 	if len(homestayActivityList) > 0 {
-		if err := mr.MapReduceVoid(
-			func(source chan<- int64) {
-				for _, homestayActivity := range homestayActivityList {
-					source <- homestayActivity.DataId
-				}
-			},
-			func(item int64, writer mr.Writer[*usercenter.User], cancel func(error)) {
-				id := item
+		if err := mr.MapReduceVoid(func(source chan<- interface{}) {
+			for _, homestayActivity := range homestayActivityList {
+				source <- homestayActivity.DataId
+			}
+		}, func(item interface{}, writer mr.Writer, cancel func(error)) {
+			id, ok := item.(int64)
+			if !ok {
+				logx.WithContext(l.ctx).Errorf("id %d assert err", id)
+				return
+			}
 
-				userResp, err := l.svcCtx.UsercenterRpc.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{
-					Id: id,
-				})
-				if err != nil {
-					logx.WithContext(l.ctx).Errorf("GoodListLogic GoodList fail userId : %d ,err:%v", id, err)
-					return
-				}
-				if userResp.User != nil && userResp.User.Id > 0 {
-					writer.Write(userResp.User)
-				}
-			},
-			func(pipe <-chan *usercenter.User, cancel func(error)) {
-				for item := range pipe {
-					var typesHomestayBusiness types.HomestayBusinessBoss
-					_ = copier.Copy(&typesHomestayBusiness, item)
+			userResp, err := l.svcCtx.UsercenterRpc.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{
+				Id: id,
+			})
+			if err != nil {
+				logx.WithContext(l.ctx).Errorf("GoodListLogic GoodList fail userId : %d ,err:%v", id, err)
+				return
+			}
+			if userResp.User != nil && userResp.User.Id > 0 {
+				writer.Write(userResp.User)
+			}
+		}, func(pipe <-chan interface{}, cancel func(error)) {
+			for item := range pipe {
+				var typesHomestayBusiness types.HomestayBusinessBoss
+				_ = copier.Copy(&typesHomestayBusiness, item)
 
-					// compute star todo
-					resp = append(resp, typesHomestayBusiness)
-				}
-			},
-		); err != nil {
+				// compute star todo
+				resp = append(resp, typesHomestayBusiness)
+			}
+		}); err != nil {
 			logx.Errorf("mapreduce failed: %v", err)
 			return nil, err
 		}

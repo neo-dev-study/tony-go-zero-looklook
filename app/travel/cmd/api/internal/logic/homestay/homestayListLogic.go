@@ -3,17 +3,18 @@ package homestay
 import (
 	"context"
 
-	"github.com/Masterminds/squirrel"
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/mr"
-
 	"looklook/app/travel/cmd/api/internal/svc"
 	"looklook/app/travel/cmd/api/internal/types"
 	"looklook/app/travel/model"
 	"looklook/common/tool"
 	"looklook/common/xerr"
+
+	"github.com/Masterminds/squirrel"
+
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/mr"
 )
 
 type HomestayListLogic struct {
@@ -42,38 +43,40 @@ func (l *HomestayListLogic) HomestayList(req types.HomestayListReq) (*types.Home
 
 	var resp []types.Homestay
 	if len(homestayActivityList) > 0 { // mapreduce example
-		if err := mr.MapReduceVoid(
-			func(source chan<- int64) {
-				for _, homestayActivity := range homestayActivityList {
-					source <- homestayActivity.DataId
-				}
-			},
-			func(item int64, writer mr.Writer[*model.Homestay], cancel func(error)) {
-				id := item
-				homestay, err := l.svcCtx.HomestayModel.FindOne(l.ctx, id)
-				if err != nil && err != model.ErrNotFound {
-					logx.WithContext(l.ctx).Errorf("ActivityHomestayListLogic ActivityHomestayList 获取活动数据失败 id : %d ,err : %v", id, err)
+		if err := mr.MapReduceVoid(func(source chan<- interface{}) {
+			for _, homestayActivity := range homestayActivityList {
+				source <- homestayActivity.DataId
+			}
+		}, func(item interface{}, writer mr.Writer, cancel func(error)) {
+			id, ok := item.(int64)
+			if !ok {
+				logx.WithContext(l.ctx).Errorf("id %d assert err", id)
+				return
+			}
+
+			homestay, err := l.svcCtx.HomestayModel.FindOne(l.ctx, id)
+			if err != nil && err != model.ErrNotFound {
+				logx.WithContext(l.ctx).Errorf("ActivityHomestayListLogic ActivityHomestayList 获取活动数据失败 id : %d ,err : %v", id, err)
+				return
+			}
+			writer.Write(homestay)
+		}, func(pipe <-chan interface{}, cancel func(error)) {
+			for item := range pipe {
+				homestay, ok := item.(*model.Homestay)
+				if !ok {
+					logx.WithContext(l.ctx).Errorf("homestay %d assert err", homestay)
 					return
 				}
-				writer.Write(homestay)
-			},
-			func(pipe <-chan *model.Homestay, cancel func(error)) {
-				for homestay := range pipe {
-					if homestay == nil {
-						logx.WithContext(l.ctx).Errorf("homestay is nil")
-						return
-					}
-					var tyHomestay types.Homestay
-					_ = copier.Copy(&tyHomestay, homestay)
+				var tyHomestay types.Homestay
+				_ = copier.Copy(&tyHomestay, homestay)
 
-					tyHomestay.FoodPrice = tool.Fen2Yuan(homestay.FoodPrice)
-					tyHomestay.HomestayPrice = tool.Fen2Yuan(homestay.HomestayPrice)
-					tyHomestay.MarketHomestayPrice = tool.Fen2Yuan(homestay.MarketHomestayPrice)
+				tyHomestay.FoodPrice = tool.Fen2Yuan(homestay.FoodPrice)
+				tyHomestay.HomestayPrice = tool.Fen2Yuan(homestay.HomestayPrice)
+				tyHomestay.MarketHomestayPrice = tool.Fen2Yuan(homestay.MarketHomestayPrice)
 
-					resp = append(resp, tyHomestay)
-				}
-			},
-		); err != nil {
+				resp = append(resp, tyHomestay)
+			}
+		}); err != nil {
 			logx.Errorf("mapreduce failed: %v", err)
 			return nil, err
 		}

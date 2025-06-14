@@ -3,14 +3,14 @@ package logic
 import (
 	"context"
 
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"looklook/app/usercenter/cmd/rpc/internal/svc"
 	"looklook/app/usercenter/cmd/rpc/usercenter"
 	"looklook/app/usercenter/model"
 	"looklook/common/tool"
 	"looklook/common/xerr"
+
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type LoginLogic struct {
@@ -77,9 +77,6 @@ func (l *LoginLogic) loginByMobile(mobile, password string) (int64, error) {
 	return user.Id, nil
 }
 
-// _loginBySmallWx is currently unused, reserved for future use.
-//
-//nolint:unused
-func (l *LoginLogic) _loginBySmallWx() error {
+func (l *LoginLogic) loginBySmallWx() error {
 	return nil
 }
