@@ -11,10 +11,10 @@ Prometheus:
 
 #链路追踪
 Telemetry:
- Name: mqueue-scheduler
- Endpoint: http://192.168.222.19:14268/api/traces
- Sampler: 1.0
- Batcher: jaeger
+  Name: mqueue-scheduler
+  Endpoint: http://192.168.222.19:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
 
 Log:
   ServiceName: mqueue-scheduler
@@ -24,4 +24,3 @@ Redis:
   Host: 192.168.222.33:6379
   Type: node
   Pass: password
-  key: mqueue-scheduler

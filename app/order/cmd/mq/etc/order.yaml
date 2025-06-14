@@ -24,7 +24,6 @@ Redis:
   Host: 192.168.222.33:6379
   Type: node
   Pass: password
-  key: order-mq
 
 #kq
 PaymentUpdateStatusConf:
