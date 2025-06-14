@@ -99,9 +99,9 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/app/mqueue/cmd/rpc/mqueue.go",
+            "program": "${workspaceFolder}/app/mqueue/cmd/scheduler/mqueue.go",
             "args": [
-                "app/mqueue/cmd/rpc/etc/scheduler-dev.yaml"
+                "app/mqueue/cmd/scheduler/etc/scheduler-dev.yaml"
             ]
         },
         {
@@ -109,9 +109,9 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/app/mqueue/cmd/api/mqueue.go",
+            "program": "${workspaceFolder}/app/mqueue/cmd/job/mqueue.go",
             "args": [
-                "app/mqueue/cmd/api/etc/mqueue-dev.yaml"
+                "app/mqueue/cmd/job/etc/mqueue-dev.yaml"
             ]
         },
     ],
