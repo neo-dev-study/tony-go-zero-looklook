@@ -11,7 +11,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/usercenter/cmd/rpc/usercenter.go",
             "args": [
-                "app/usercenter/cmd/rpc/etc/usercenter.yaml"
+                "app/usercenter/cmd/rpc/etc/usercenter-dev.yaml"
             ]
         },
         {
@@ -21,7 +21,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/usercenter/cmd/api/usercenter.go",
             "args": [
-                "app/usercenter/cmd/api/etc/usercenter.yaml"
+                "app/usercenter/cmd/api/etc/usercenter-dev.yaml"
             ]
         },
         {
@@ -31,7 +31,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/travel/cmd/rpc/travel.go",
             "args": [
-                "app/travel/cmd/rpc/etc/travel.yaml"
+                "app/travel/cmd/rpc/etc/travel-dev.yaml"
             ]
         },
         {
@@ -41,7 +41,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/travel/cmd/api/travel.go",
             "args": [
-                "app/travel/cmd/api/etc/travel.yaml"
+                "app/travel/cmd/api/etc/travel-dev.yaml"
             ]
         },
         {
@@ -51,7 +51,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/payment/cmd/rpc/payment.go",
             "args": [
-                "app/payment/cmd/rpc/etc/payment.yaml"
+                "app/payment/cmd/rpc/etc/payment-dev.yaml"
             ]
         },
         {
@@ -61,7 +61,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/payment/cmd/api/payment.go",
             "args": [
-                "app/payment/cmd/api/etc/payment.yaml"
+                "app/payment/cmd/api/etc/payment-dev.yaml"
             ]
         },
         {
@@ -71,7 +71,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/order/cmd/rpc/order.go",
             "args": [
-                "app/order/cmd/rpc/etc/order.yaml"
+                "app/order/cmd/rpc/etc/order-dev.yaml"
             ]
         },
         {
@@ -81,7 +81,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/order/cmd/api/order.go",
             "args": [
-                "app/order/cmd/api/etc/order.yaml"
+                "app/order/cmd/api/etc/order-dev.yaml"
             ]
         },
         {
@@ -91,28 +91,47 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/order/cmd/mq/order.go",
             "args": [
-                "app/order/cmd/mq/etc/order.yaml"
+                "app/order/cmd/mq/etc/order-dev.yaml"
             ]
         },
         {
-            "name": "rpc-scheduler",
+            "name": "mqueue-scheduler",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/app/scheduler/cmd/rpc/scheduler.go",
+            "program": "${workspaceFolder}/app/mqueue/cmd/rpc/mqueue.go",
             "args": [
-                "app/scheduler/cmd/rpc/etc/scheduler.yaml"
+                "app/mqueue/cmd/rpc/etc/scheduler-dev.yaml"
             ]
         },
         {
-            "name": "api-scheduler",
+            "name": "job-mqueue",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/app/scheduler/cmd/api/scheduler.go",
+            "program": "${workspaceFolder}/app/mqueue/cmd/api/mqueue.go",
             "args": [
-                "app/scheduler/cmd/api/etc/scheduler.yaml"
+                "app/mqueue/cmd/api/etc/mqueue-dev.yaml"
             ]
         },
+    ],
+    "compounds": [
+        {
+            "name": "All (rpc-usercenter & api-usercenter & rpc-travel & api-travel & rpc-payment & api-payment & rpc-order & api-order & mq-order & mqueue-scheduler & job-mqueue)",
+            "configurations": [
+                "rpc-usercenter",
+                "api-usercenter",
+                "rpc-travel",
+                "api-travel",
+                "rpc-payment",
+                "api-payment",
+                "rpc-order",
+                "api-order",
+                "mq-order",
+                "mqueue-scheduler",
+                "job-mqueue"
+            ],
+            "stopAll": true
+        }
     ]
 }
