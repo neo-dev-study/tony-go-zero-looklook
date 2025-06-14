@@ -111,7 +111,7 @@
             "program": "${workspaceFolder}/app/mqueue/cmd/scheduler/mqueue.go",
             "args": [
                 "-f",
-                "etc/scheduler-local.yaml"
+                "etc/mqueue-local.yaml"
             ]
         },
         {

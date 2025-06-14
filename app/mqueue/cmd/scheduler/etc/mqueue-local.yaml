@@ -21,6 +21,6 @@ Log:
   Level: error
 
 Redis:
-  Host: 127.0.0.1:6379
+  Host: 127.0.0.1:16379
   Type: node
-  Pass: password
+  Pass: redis1234

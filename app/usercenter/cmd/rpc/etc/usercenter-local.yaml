@@ -25,12 +25,12 @@ Log:
   Level: error
 
 Redis:
-  Host: 127.0.0.1:6379
+  Host: 127.0.0.1:16379
   Type: node
-  Pass: password
+  Pass: redis1234
 
 DB:
-  DataSource: root:123456@tcp(mysql:33069)/looklook_usercenter?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: root:mysql1234@tcp(mysql:13306)/looklook_usercenter?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 Cache:
-  - Host: 127.0.0.1:6379
-    Pass: password
+  - Host: 127.0.0.1:16379
+    Pass: redis1234

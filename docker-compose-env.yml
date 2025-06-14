@@ -55,7 +55,7 @@ services:
     volumes:
       - ./data/grafana/data:/var/lib/grafana
     ports:
-      - "3001:3000"
+      - "13000:3000"
     networks:
       - looklook_net
 
