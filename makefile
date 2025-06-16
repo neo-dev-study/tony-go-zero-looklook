@@ -10,9 +10,7 @@ tools: # Install the necessary tools | 安装必要的工具
 	$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@latest;
 	$(GO) install golang.org/x/tools/cmd/goimports@latest
 	$(GO) install mvdan.cc/gofumpt@latest;
-
 	$(GO) install github.com/go-swagger/go-swagger/cmd/swagger@latest;
-
 	$(GO) install github.com/cortesi/modd/cmd/modd@latest
 
 
@@ -37,7 +35,7 @@ Docker_Mac_Start:
 
 .PHONY: Modd_Local
 Modd_Local:
-	modd -f ./modd/modd.conf
+	modd -f ./modd/local.modd.conf
 
 .PHONY: Modd_Dev
 Modd_Dev:

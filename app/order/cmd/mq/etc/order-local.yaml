@@ -29,7 +29,7 @@ Redis:
 PaymentUpdateStatusConf:
   Name: PaymentUpdateStatus
   Brokers:
-    - 127.0.0.1:9092
+    - 127.0.0.1:19092
   Group: payment-update-paystatus-group
   Topic: payment-update-paystatus-topic
   Offset: first
