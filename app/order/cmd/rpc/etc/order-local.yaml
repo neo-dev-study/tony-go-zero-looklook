@@ -1,0 +1,36 @@
+Name: order-rpc
+ListenOn: 0.0.0.0:2001
+Mode: dev
+
+Log:
+  ServiceName: order-rpc
+  Level: error
+
+#监控
+Prometheus:
+  Host: 0.0.0.0
+  Port: 4002
+  Path: /metrics
+
+#链路追踪
+Telemetry:
+  Name: order-rpc
+  Endpoint: http://127.0.0.1:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+
+Redis:
+  Host: 127.0.0.1:16379
+  Type: node
+  Pass: redis1234
+DB:
+  DataSource: root:mysql1234@tcp(mysql:13306)/looklook_order?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+Cache:
+  - Host: 127.0.0.1:16379
+    Pass: redis1234
+
+#rpc
+TravelRpcConf:
+  Endpoints:
+    - 127.0.0.1:2003
+  NonBlock: true

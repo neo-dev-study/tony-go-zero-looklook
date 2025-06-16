@@ -1,0 +1,37 @@
+Name: payment-rpc
+ListenOn: 0.0.0.0:2002
+Mode: dev
+
+#监控
+Prometheus:
+  Host: 0.0.0.0
+  Port: 4005
+  Path: /metrics
+
+#链路追踪
+Telemetry:
+  Name: payment-rpc
+  Endpoint: http://127.0.0.1:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+
+Log:
+  ServiceName: payment-rpc
+  Level: error
+
+Redis:
+  Host: 127.0.0.1:16379
+  Type: node
+  Pass: redis1234
+
+DB:
+  DataSource: root:mysql1234@tcp(mysql:13306)/looklook_payment?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+Cache:
+  - Host: 127.0.0.1:16379
+    Pass: redis1234
+
+#pay success notify order-mq for kq(kafka pub sub)
+KqPaymentUpdatePayStatusConf:
+  Brokers:
+    - 127.0.0.1:19092
+  Topic: payment-update-paystatus-topic
