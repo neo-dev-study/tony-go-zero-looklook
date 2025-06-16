@@ -25,7 +25,7 @@ Redis:
   Pass: password
   key: payment-rpc
 DB:
-  DataSource: root:123456@tcp(mysql:33069)/looklook_payment?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: root:mysql1234@tcp(mysql:33069)/looklook_payment?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 Cache:
   - Host: redis:6379
     Pass: password

@@ -186,7 +186,7 @@ docker-compose up -d
    通过 elb 绑定的弹性公网 ip 访问
 
    ```
-   curl -X POST "http://139.xx.xx.xx/usercenter/v1/user/register" -H "Content-Type: application/json" -d "{\"mobile\":\"18888888888\",\"password\":\"123456\"}"
+   curl -X POST "http://139.xx.xx.xx/usercenter/v1/user/register" -H "Content-Type: application/json" -d "{\"mobile\":\"18888888888\",\"password\":\"mysql1234\"}"
    ```
 
    成功则返回：

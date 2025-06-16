@@ -1,152 +1,90 @@
 ######## 项目依赖的环境，启动项目之前要先启动此环境 #######
 ######## The environment that the project depends on, starting this environment before starting the project #######
 
+networks:
+  looklook_net:
+    driver: bridge
+    external: true
+
 services:
-  #jaeger链路追踪 — Jaeger for tracing
-  jaeger:
-    # image: jaegertracing/all-in-one:1.63.0
-    # image: jaegertracing/all-in-one:1.69.0
-    image: jaegertracing/jaeger:2.6.0
-    container_name: jaeger
+  #redis容器 - Redis container
+  redis:
+    image: redis:8.0.1
+    container_name: redis
     restart: always
-    ports:
-      - "5775:5775/udp"
-      - "6831:6831/udp"
-      - "6832:6832/udp"
-      - "5778:5778"
-      - "16686:16686"
-      - "14268:14268"
-      - "9411:9411"
+    privileged: true # 拥有 所有的 Linux capabilities（能力）
     environment:
-      - SPAN_STORAGE_TYPE=elasticsearch
-      - ES_SERVER_URLS=http://elasticsearch:9200
-      - LOG_LEVEL=debug
-    depends_on:
-      - elasticsearch
+      TZ: Asia/Shanghai # 时区上海 - Time zone Shanghai (Change if needed)
+    ports:
+      - 16379:6379
+    volumes:
+      - ./data/redis/data:/data:rw # 数据文件 - data files
+    command: "redis-server --requirepass redis1234  --appendonly yes"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redis1234", "ping"] # 使用密码检查
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - looklook_net
 
-  #prometheus监控 — Prometheus for monitoring
-  prometheus:
-    image: prom/prometheus:v2.28.1
-    platform: linux/amd64
-    # image: prom/prometheus:v3.3.1
-    container_name: prometheus
+  # MySQL 关系型数据库 - 核心数据存储
+  mysql:
+    image: mysql:8.0 # 官方MySQL镜像
+    container_name: mysql # 容器名称
+    restart: unless-stopped # 总是重启策略
     environment:
-      # 时区上海 - Time zone Shanghai (Change if needed)
       TZ: Asia/Shanghai
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+      MYSQL_ROOT_PASSWORD: "mysql1234" # root 用户密码，务必修改为安全密码
+      MYSQL_DATABASE: testdb # 容器启动时自动创建的数据库名称
+      MYSQL_USER: "test" # 新建普通用户
+      MYSQL_PASSWORD: "123456" # 新用户密码
+      # MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ./deploy/development/prometheus/server/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./data/prometheus/data:/prometheus
+      - ./data/mysql/data:/var/lib/mysql # 持久化数据卷挂载，保存数据库数据
+      - ./data/mysql/log:/var/log/mysql # 日志文件
+    ports:
+      - "13306:3306" # 暴露MySQL默认端口
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-p${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - looklook_net
+
+  # Asynqmon - Asynq 任务队列的Web管理界面
+  asynqmon:
+    image: hibiken/asynqmon:latest
+    platform: linux/amd64
+    # image: gcr.io/distroless/base:latest-arm64
+    container_name: asynqmon
+    restart: always
+    ports:
+      - 18080:8080
     command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-    restart: always
-    user: root
-    ports:
-      - 9090:9090
-    networks:
-      - looklook_net
-
-  #查看prometheus监控数据 - Grafana to view Prometheus monitoring data
-  grafana:
-    image: grafana/grafana:8.0.6
-    platform: linux/amd64
-    container_name: grafana
-    hostname: grafana
-    user: root
-    environment:
-      # 时区上海 - Time zone Shanghai (Change if needed)
-      TZ: Asia/Shanghai
-    restart: always
-    volumes:
-      - ./data/grafana/data:/var/lib/grafana
-    ports:
-      - "3001:3000"
-    networks:
-      - looklook_net
-
-  elasticsearch:
-    image: elasticsearch:9.0.1
-    container_name: elasticsearch
-    restart: unless-stopped
-    environment:
-      # - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
-      # - "TZ=Asia/Shanghai"
-      # - "discovery.type=single-node"
-      # - "xpack.security.enabled=false"
-      ES_JAVA_OPTS: -Xms1024m -Xmx1024m
-      TZ: Asia/Shanghai
-      discovery.type: single-node
-      xpack.security.enabled: false
-    ports:
-      - "9200:9200"
-      - "9300:9300" # 接点通讯使用
-    volumes:
-      - ./data/es/data:/usr/share/elasticsearch/data
-      - ./data/es/plugins:/usr/share/elasticsearch/plugins
-    networks:
-      - looklook_net
-
-  # 针对 elasticsearch 的工具
-  kibana:
-    image: kibana:9.0.1
-    container_name: kibana
-    restart: unless-stopped
-    environment:
-      # - "TZ=Asia/Shanghai"
-      # - "I18N_LOCALE=zh-CN"
-      # - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
-      # - "XPACK_SECURITY_ENABLED=false"
-      TZ: Asia/Shanghai
-      I18N_LOCALE: zh-CN
-      ELASTICSEARCH_HOSTS: http://elasticsearch:9200 # 连接elasticsearch接口
-      XPACK_SECURITY_ENABLED: false
-    depends_on: # 依赖集群
-      - elasticsearch
-    ports:
-      - "5601:5601"
-    networks:
-      - looklook_net
-
-  #消费kafka中filebeat收集的数据输出到es - The data output collected by FileBeat in Kafka is output to ES
-  go-stash:
-    image: kevinwan/go-stash:1.1.1
-    container_name: go-stash
-    environment:
-      # 时区上海 - Time zone Shanghai (Change if needed)
-      TZ: Asia/Shanghai
-    restart: always
-    volumes:
-      - ./deploy/development/go-stash/etc:/app/etc
+      - "--redis-addr=redis:6379"
+      - "--redis-password=redis1234"
     networks:
       - looklook_net
     depends_on:
-      - elasticsearch
-      - kafka
-
-  #收集业务数据 - Collect business data
-  filebeat:
-    image: elastic/filebeat:8.12.2
-    # image: elastic/filebeat:8.18.1
-    # image: elastic/filebeat:9.0.1
-    container_name: filebeat
-    environment:
-      # 时区上海 - Time zone Shanghai (Change if needed)
-      TZ: Asia/Shanghai
-    user: root
-    restart: always
-    entrypoint: "filebeat -e -strict.perms=false" #解决配置文件权限问题 - Solving the configuration file permissions
-    volumes:
-      - ./deploy/development/filebeat/conf/filebeat.yml:/usr/share/filebeat/filebeat.yml
-      # 此处需指定docker的containers目录，取决于你docker的配置 - The containers directory of docker needs to be specified here, depending on your docker configuration
-      # 如snap安装的docker，则为/var/snap/docker/common/var-lib-docker/containers - Example if docker is installed by Snap /var/snap/docker/common/var-lib-docker/containers
-      # - /var/snap/docker/common/var-lib-docker/containers:/var/lib/docker/containers
-      - /var/lib/docker/containers:/var/lib/docker/containers
-    depends_on:
-      - kafka
-    networks:
-      - looklook_net
+      redis:
+        condition: service_healthy # 依赖redis服务健康状态
 
   #消息队列 - Message queue
   kafka:
@@ -175,84 +113,195 @@ services:
     networks:
       - looklook_net
 
-  #asynqmon asynq 延迟队列、定时队列的webui - Asynqmon asynq delay queue, timing queue's webUI
-  asynqmon:
-    image: hibiken/asynqmon:latest
-    platform: linux/amd64
-    # image: gcr.io/distroless/base:latest-arm64
-    container_name: asynqmon
-    ports:
-      - 8980:8080
-    command:
-      - "--redis-addr=redis:6379"
-      - "--redis-password=G62m50oigInC30sf"
-    restart: always
-    networks:
-      - looklook_net
-    depends_on:
-      - redis
-
-  mysql:
-    image: mysql:8.0 # mysql 官方镜像，版本 8.0
-    container_name: base-mysql # 容器名称
-    restart: unless-stopped # 容器异常退出自动重启
+  # Elasticsearch 搜索和分析引擎
+  elasticsearch:
+    image: elasticsearch:9.0.1
+    container_name: elasticsearch
+    restart: unless-stopped
     environment:
+      # - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+      # - "TZ=Asia/Shanghai"
+      # - "discovery.type=single-node"
+      # - "xpack.security.enabled=false"
       TZ: Asia/Shanghai
-      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
-      MYSQL_ROOT_PASSWORD: "123456" # root 用户密码，务必修改为安全密码
-      MYSQL_DATABASE: testdb # 容器启动时自动创建的数据库名称
-      MYSQL_USER: "test" # 新建普通用户
-      MYSQL_PASSWORD: "123456" # 新用户密码
-      # MYSQL_ROOT_PASSWORD: root
+      ES_JAVA_OPTS: -Xms1024m -Xmx1024m
+      discovery.type: single-node
+      xpack.security.enabled: false
     ports:
-      - "33069:3306" # 端口映射：宿主机 3306 映射到容器 3306 端口
+      - "19200:9200"
+      - "19300:9300" # 接点通讯使用
     volumes:
-      - ./data/mysql/data:/var/lib/mysql # 持久化数据卷挂载，保存数据库数据
-      - ./data/mysql/log:/var/log/mysql # 日志文件
-    command: >
-      --default-authentication-plugin=mysql_native_password
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_general_ci
-      --explicit_defaults_for_timestamp=true
-      --lower_case_table_names=1
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "-h",
-          "localhost",
-          "-p${MYSQL_ROOT_PASSWORD}",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - ./data/es/data:/usr/share/elasticsearch/data
+      - ./data/es/plugins:/usr/share/elasticsearch/plugins
     networks:
       - looklook_net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cat/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  #redis容器 - Redis container
-  redis:
-    image: redis:8.0.1
-    container_name: redis
+  # Kibana Elasticsearch可视化工具
+  kibana:
+    image: kibana:9.0.1
+    container_name: kibana
+    restart: unless-stopped
+    environment:
+      # - "TZ=Asia/Shanghai"
+      # - "I18N_LOCALE=zh-CN"
+      # - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+      # - "XPACK_SECURITY_ENABLED=false"
+      TZ: Asia/Shanghai
+      I18N_LOCALE: zh-CN
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200 # 连接elasticsearch接口
+      XPACK_SECURITY_ENABLED: false
     ports:
-      - 36379:6379
+      - "15601:5601"
+    depends_on:
+      elasticsearch: # 依赖ES服务
+        condition: service_healthy # 等待ES健康
+    networks:
+      - looklook_net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  #prometheus监控 — Prometheus for monitoring
+  # Prometheus 监控系统
+  prometheus:
+    image: prom/prometheus:v2.28.1
+    platform: linux/amd64
+    # image: prom/prometheus:v3.3.1
+    container_name: prometheus
     environment:
       # 时区上海 - Time zone Shanghai (Change if needed)
       TZ: Asia/Shanghai
     volumes:
-      # 数据文件 - data files
-      - ./data/redis/data:/data:rw
-    command: "redis-server --requirepass G62m50oigInC30sf  --appendonly yes"
-    privileged: true
+      - ./deploy/development/prometheus/server/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus/data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
     restart: always
+    user: root
+    ports:
+      - 19090:9090
     networks:
       - looklook_net
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-networks:
-  looklook_net:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.16.0.0/16
-    external: true
+  # Grafana 可视化监控
+  grafana:
+    image: grafana/grafana:8.0.6
+    platform: linux/amd64
+    container_name: grafana
+    restart: always
+    hostname: grafana # 设置主机名
+    user: root # 使用root用户
+    environment:
+      TZ: Asia/Shanghai # 时区上海 - Time zone Shanghai (Change if needed)
+    volumes:
+      - ./data/grafana/data:/var/lib/grafana
+    ports:
+      - "13001:3000"
+    networks:
+      - looklook_net
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  #jaeger链路追踪 — Jaeger for tracing
+  jaeger:
+    # image: jaegertracing/all-in-one:1.63.0
+    # image: jaegertracing/all-in-one:1.69.0
+    image: jaegertracing/jaeger:2.6.0
+    container_name: jaeger
+    restart: always
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://elasticsearch:9200
+      - LOG_LEVEL=debug
+    ports:
+      - "15775:5775/udp"
+      - "16831:6831/udp"
+      - "16832:6832/udp"
+      - "15778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "19411:9411"
+    depends_on:
+      - elasticsearch
+    networks:
+      - looklook_net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:14269 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Go-stash 数据处理工具
+  go-stash:
+    image: kevinwan/go-stash:1.1.1
+    container_name: go-stash
+    restart: unless-stopped # 重启策略: 容器异常退出自动重启
+    environment:
+      TZ: Asia/Shanghai # 时区上海 - Time zone Shanghai (Change if needed)
+    volumes:
+      - ./deploy/development/go-stash/etc:/app/etc
+    depends_on:
+      elasticsearch: # 依赖ES
+        condition: service_healthy # 等待ES健康
+      kafka: # 依赖Kafka
+        condition: service_healthy # 等待Kafka健康
+    networks:
+      - looklook_net
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep go-stash || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Filebeat 日志收集器
+  filebeat:
+    image: elastic/filebeat:8.12.2
+    # image: elastic/filebeat:8.18.1
+    # image: elastic/filebeat:9.0.1
+    container_name: filebeat
+    restart: always
+    user: root
+    entrypoint: "filebeat -e -strict.perms=false" #解决配置文件权限问题 - Solving the configuration file permissions
+    environment:
+      TZ: Asia/Shanghai # 时区上海 - Time zone Shanghai (Change if needed)
+
+    volumes:
+      - ./deploy/development/filebeat/conf/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      # 此处需指定docker的containers目录，取决于你docker的配置 - The containers directory of docker needs to be specified here, depending on your docker configuration
+      # 如snap安装的docker，则为/var/snap/docker/common/var-lib-docker/containers - Example if docker is installed by Snap /var/snap/docker/common/var-lib-docker/containers
+      # - /var/snap/docker/common/var-lib-docker/containers:/var/lib/docker/containers
+      - /var/lib/docker/containers:/var/lib/docker/containers
+    depends_on:
+      kafka: # 依赖Kafka
+        condition: service_healthy # 等待Kafka健康
+    networks:
+      - looklook_net
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep filebeat || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

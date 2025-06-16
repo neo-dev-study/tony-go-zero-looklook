@@ -1,15 +1,15 @@
 <h1>Table of Contents</h1>
 
-  - [VIII. Messages, Delays, Timed Queues](#viii-messages-delays-timed-queues)
-    - [1. Overview](#1-overview)
-    - [2. How to use](#2-how-to-use)
-      - [2.1. main](#21-main)
-      - [2.2. mq category management](#22-mq-category-management)
-      - [2.3. Actual business](#23-actual-business)
-        - [2.3.1 Delayed Queues](#231-delayed-queues)
-        - [2.3.2 kq message queue](#232-kq-message-queue)
-    - [3. Timed tasks](#3-timed-tasks)
-    - [4. Conclusion](#4-conclusion)
+- [VIII. Messages, Delays, Timed Queues](#viii-messages-delays-timed-queues)
+  - [1. Overview](#1-overview)
+  - [2. How to use](#2-how-to-use)
+    - [2.1. main](#21-main)
+    - [2.2. mq category management](#22-mq-category-management)
+    - [2.3. Actual business](#23-actual-business)
+      - [2.3.1 Delayed Queues](#231-delayed-queues)
+      - [2.3.2 kq message queue](#232-kq-message-queue)
+  - [3. Timed tasks](#3-timed-tasks)
+  - [4. Conclusion](#4-conclusion)
 
 ## VIII. Messages, Delays, Timed Queues
 
@@ -249,7 +249,7 @@ func (l *AsynqTask) closeHomestayOrderStateMqHandler(ctx context.Context, t *asy
 
 Look under the go-zero-looklook/app/order/cmd/mq/internal/mqs/kq folder, because kq is not quite the same as asynq, it is itself managed using go-zero's Service, which has implemented the starter, stopper interface, so we add it to the / Users/seven/Developer/goenv/go-zero-looklook/app/order/cmd/mq/internal/listen/kqMqs.go to define a go-queue service directly to the serviceGroup and give it to main to start. Our business code only needs to implement go-queue's Consumer to write our own business directly.
 
-1) /Users/seven/Developer/goenv/go-zero-looklook/app/order/cmd/mq/internal/listen/kqMqs.go
+1. /Users/seven/Developer/goenv/go-zero-looklook/app/order/cmd/mq/internal/listen/kqMqs.go
 
 ```go
 func KqMqs(c config.Config, ctx context.Context, svcContext *svc.ServiceContext) []service.Service {
@@ -263,7 +263,7 @@ func KqMqs(c config.Config, ctx context.Context, svcContext *svc.ServiceContext)
 
 You can see that kq.MustNewQueue itself returns queue.MessageQueue, queue.MessageQueue also implements Start, Stop
 
-2) In business
+2. In business
 
 /Users/seven/Developer/goenv/go-zero-looklook/app/order/cmd/mq/internal/mqs/kq/paymentUpdateStatus.go
 
@@ -298,7 +298,7 @@ About timed tasks, currently go-zero-looklook is not used, here I also explain
 - Use xxl-job, gocron distributed timing task system access
 - asynq's shedule
 
-⚠️  Project specific look at app/mqueue/cmd/scheduler and app/mqueue/cmd/job
+⚠️ Project specific look at app/mqueue/cmd/scheduler and app/mqueue/cmd/job
 
 Here I'll demonstrate the asynq schedule
 
@@ -307,10 +307,9 @@ The client is used to define the scheduling time, the server is to accept the cl
 asynqtest/docker-compose.yml
 
 ```yaml
-version: '3'
+version: "3"
 
 services:
-
   #asynqmon asynq webui
   asynqmon:
     image: hibiken/asynqmon:latest
@@ -318,14 +317,13 @@ services:
     ports:
       - 8980:8080
     command:
-      - '--redis-addr=redis:6379'
-      - '--redis-password=G62m50oigInC30sf'
+      - "--redis-addr=redis:6379"
+      - "--redis-password=redis1234"
     restart: always
     networks:
       - asynqtest_net
     depends_on:
       - redis
-
 
   #redis
   redis:
@@ -337,12 +335,11 @@ services:
       TZ: Asia/Shanghai
     volumes:
       - ./data/redis/data:/data:rw
-    command: "redis-server --requirepass G62m50oigInC30sf  --appendonly yes"
+    command: "redis-server --requirepass redis1234  --appendonly yes"
     privileged: true
     restart: always
     networks:
       - asynqtest_net
-
 
 networks:
   asynqtest_net:
@@ -366,7 +363,7 @@ import (
 )
 
 const redisAddr = "127.0.0.1:63779"
-const redisPwd = "G62m50oigInC30sf"
+const redisPwd = "redis1234"
 
 func main() {
  // scheduler
@@ -414,7 +411,7 @@ import (
 
 func main() {
  srv := asynq.NewServer(
-  asynq.RedisClientOpt{Addr: "127.0.0.1:63779", Password: "G62m50oigInC30sf"},
+  asynq.RedisClientOpt{Addr: "127.0.0.1:63779", Password: "redis1234"},
   asynq.Config{
    Concurrency: 10,
    Queues: map[string]int{
@@ -465,7 +462,7 @@ type EmailPayload struct {
 
 Start server.go, client.go
 
-You can see all the tasks defined by the client by typing <http://127.0.0.1:8980/schedulers>  in the browser
+You can see all the tasks defined by the client by typing <http://127.0.0.1:8980/schedulers> in the browser
 
 ![image-20220128113416672](../chinese/images/8/image-20220128113416672.png)
 

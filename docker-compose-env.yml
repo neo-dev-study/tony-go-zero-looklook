@@ -178,7 +178,7 @@ services:
       - 8980:8080
     command:
       - "--redis-addr=redis:6379"
-      - "--redis-password=G62m50oigInC30sf"
+      - "--redis-password=redis1234"
     restart: always
     networks:
       - looklook_net
@@ -192,10 +192,10 @@ services:
     environment:
       TZ: Asia/Shanghai
       MYSQL_ALLOW_EMPTY_PASSWORD: "no"
-      MYSQL_ROOT_PASSWORD: "123456" # root 用户密码，务必修改为安全密码
+      MYSQL_ROOT_PASSWORD: "mysql1234" # root 用户密码，务必修改为安全密码
       MYSQL_DATABASE: testdb # 容器启动时自动创建的数据库名称
       MYSQL_USER: "test" # 新建普通用户
-      MYSQL_PASSWORD: "123456" # 新用户密码
+      MYSQL_PASSWORD: "mysql1234" # 新用户密码
       # MYSQL_ROOT_PASSWORD: root
     ports:
       - "33069:3306" # 端口映射：宿主机 3306 映射到容器 3306 端口
@@ -237,7 +237,7 @@ services:
     volumes:
       # 数据文件 - data files
       - ./data/redis/data:/data:rw
-    command: "redis-server --requirepass G62m50oigInC30sf  --appendonly yes"
+    command: "redis-server --requirepass redis1234  --appendonly yes"
     privileged: true
     restart: always
     networks:
