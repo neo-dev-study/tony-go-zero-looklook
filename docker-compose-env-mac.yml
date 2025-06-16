@@ -15,11 +15,17 @@ services:
     image: wurstmeister/zookeeper
     platform: linux/amd64
     container_name: zookeeper
-    restart: always # 总是重启策略
     environment:
-      TZ: Asia/Shanghai # 时区上海 - Time zone Shanghai (Change if needed)
+      # 时区上海 - Time zone Shanghai (Change if needed)
+      TZ: Asia/Shanghai
+    restart: always
     ports:
       - 2181:2181
+    healthcheck:
+      test: ["CMD", "echo", "ruok", "|", "nc", "localhost", "2181"] # ZK特有健康检查
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - looklook_net
 
@@ -110,18 +116,29 @@ services:
     ports:
       - 9092:9092
     environment:
-      - KAFKA_ADVERTISED_HOST_NAME=kafka
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=false
-      - TZ=Asia/Shanghai
+      # TZ: Asia/Shanghai
+      # # KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9094,CONTROLLER://localhost:9093,PLAINTEXT_CONTAINER://0.0.0.0:9092 # 监听器配置
+      # KAFKA_ADVERTISED_HOST_NAME: kafka
+      # KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # # KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://<宿主机IP>:19092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LOG_RETENTION_HOURS: 72
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./data/kafka/data:/var/lib/kafka/data
     networks:
       - looklook_net
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
+      # kafka:
+      #   condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "nc -z kafka 9092 || exit 1"]
       interval: 30s
