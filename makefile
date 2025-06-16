@@ -1,3 +1,4 @@
+
 GO ?= go
 GOFMT ?= gofumpt "-s"
 GOFILES := $(shell find . -name "*.go")
@@ -34,3 +35,10 @@ Docker_Mac_Env:
 Docker_Mac_Start:
 	docker-compose up -d
 
+.PHONY: Modd_Local
+Modd_Local:
+	modd -f ./modd/modd.conf
+
+.PHONY: Modd_Dev
+Modd_Dev:
+	modd -f ./modd/dev.modd.conf
