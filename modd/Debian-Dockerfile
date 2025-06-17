@@ -1,5 +1,11 @@
 FROM golang:1.24
 
+
+LABEL Name="Debian-Dockerfile" \
+    Version="1.0.0" \
+    Description="基于 Debian 系统的golang编译版" \
+    Maintainer="tony <your@email.com>"
+
 # ENV GOPROXY=https://goproxy.cn,direct
 ENV TZ=Asia/Shanghai
 
