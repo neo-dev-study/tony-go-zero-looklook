@@ -1,5 +1,10 @@
 FROM golang:1.24-alpine3.22
 
+LABEL Name="Alpine-Dockerfile" \
+    Version="1.0.0" \
+    Description="基于 Alpine 系统的golang编译版" \
+    Maintainer="tony <your@email.com>"
+
 # ENV GOPROXY=https://goproxy.cn,direct
 ENV TZ=Asia/Shanghai
 

@@ -4,14 +4,14 @@ services:
   #前端网关nginx-gateay (只代理looklook，admin-api不在这里做代理)
   # Front-end gateway nginx-gateway (Only agent looklook，admin-api Do not be an agent here)
   nginx-gateway:
-    image: nginx:1.21.5
+    image: nginx:1.28.0
     container_name: nginx-gateway
     restart: always
     privileged: true
     environment:
       - TZ=Asia/Shanghai
     ports:
-      - 8888:8081
+      - 28888:8081
     volumes:
       - ../deploy/development/nginx/conf.d:/etc/nginx/conf.d
       - ./data/nginx/log:/var/log/nginx
@@ -33,7 +33,7 @@ services:
     environment:
       # 时区上海 - Timezone Shanghai
       TZ: Asia/Shanghai
-      GOPROXY: https://goproxy.cn,direct
+      # GOPROXY: https://goproxy.cn,direct
     working_dir: /go/looklook
     volumes:
       - .:/go/looklook
