@@ -3,14 +3,14 @@ GO ?= go
 # GOFMT ?= gofumpt "-s"
 GOFMT ?= gofumpt
 GOIMPORTS := goimports
-
 # gofumpt 安装路径
 GOFUMPT := gofumpt
-# 所有 Go 文件
-# GOFILES := $(shell find . -type f -name '*.go' -not -path "./vendor/*")
+GOIMPORTS-REVISER := goimports-reviser
+# 工具命令（建议已全局安装）
+GCI := gci
 
-GOFILES := $(shell find . -name "*.go")
-
+# GOFILES := $(shell find . -name "*.go")
+GOFILES := .
 # LDFLAGS := -s -w
 
 
@@ -28,21 +28,40 @@ install-tools: # Install the necessary tools | 安装必要的工具
 .PHONY: fmt gofumpt check-fmt
 
 fmt: # Format the codes | 格式化代码
-	@echo "==> 使用 goimports 自动整理 imports..."
+	@echo " \033[34m ==> 自动整理 imports... <== \033[0m "
 	$(GOIMPORTS) -w $(GOFILES)
-	@echo "==> 使用 gofumpt 格式化代码..."
+	$(GOIMPORTS-REVISER) -rm-unused -format $(GOFILES)
+	@echo " \033[34m ==> 格式化代码...  <==\033[0m"
 	$(GOFMT) -w $(GOFILES)
-	goimports-reviser -rm-unused -format -recursive $(GOFILES)
+
+# 使用 gci 进行 import 分组格式化（需要配置 prefix）
+gci:
+	@echo "==> 使用 gci 排序 imports..."
+	@$(GCI) write --skip-generated -s standard -s default -s "prefix($(shell go list -m))" .
+
 
 # 使用 gofumpt 检查代码是否已格式化（CI 场景使用）
 check-fmt:
-	@echo "==> 检查是否通过 gofumpt 格式..."
+	@echo " \033[34m ==> 检查是否通过 gofumpt 格式... <== \033[0m "
 	$(GOFUMPT) -l $(GOFILES) | tee /dev/stderr | test -z
 
-# .PHONY: lint
-# lint: # Run go linter | 运行代码错误分析
-# 	# golangci-lint run -D staticcheck
-# 	golangci-lint run --disable=unused -D staticcheck
+# 检查 goimports 格式是否通过（CI场景可用）
+check-imports:
+	@echo "==> 检查 import 是否正确..."
+	@! $(GOIMPORTS) -l $(GOFILES) | grep .
+
+
+.PHONY: lint
+lint: # Run go linter | 运行代码错误分析
+	@echo " \033[34m ==> 运行代码错误分析 <== \033[0m "
+	# golangci-lint run -D staticcheck
+	golangci-lint run --disable=unused -D staticcheck
+
+# 执行静态检查（例如 go vet）
+lint-vet:
+	@echo " \033[34m ==> 静态检查代码 (go vet)... <== \033[0m "
+	@go vet ./...
+
 
 .PHONY: Docker_Mac_Env
 Docker_Mac_Env:
@@ -62,44 +81,5 @@ Modd_Dev:
 
 
 
-# ssssssssss
 
-# 项目根路径（自动获取）
-ROOT_DIR := $(shell pwd)
 
-# Go 命令配置
-GOFILES := $(shell find . -type f -name '*.go' -not -path "./vendor/*")
-
-# 工具命令（建议已全局安装）
-GOIMPORTS := goimports
-GCI := gci
-
-.PHONY: all fmt lint format-imports check-imports install-tools
-
-# 默认任务：格式化 + 导入 + 静态检查
-all: fmt format-imports lint
-
-# 使用 gofmt 格式化代码
-# fmt:
-# 	@echo "==> 格式化代码 (gofmt)..."
-# 	@gofumpt -s -w .
-
-# 使用 goimports 自动整理 imports（分组、删除未使用的）
-format-imports:
-	@echo "==> 使用 goimports 自动整理 imports..."
-	@$(GOIMPORTS) -w .
-
-# 使用 gci 进行 import 分组格式化（需要配置 prefix）
-gci:
-	@echo "==> 使用 gci 排序 imports..."
-	@$(GCI) write --skip-generated -s standard -s default -s "prefix($(shell go list -m))" .
-
-# 执行静态检查（例如 go vet）
-lint:
-	@echo "==> 静态检查代码 (go vet)..."
-	@go vet ./...
-
-# 检查 goimports 格式是否通过（CI场景可用）
-check-imports:
-	@echo "==> 检查 import 是否正确..."
-	@! $(GOIMPORTS) -l $(GOFILES) | grep .
