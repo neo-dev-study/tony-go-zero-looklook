@@ -24,3 +24,4 @@ Redis:
   Host: 127.0.0.1:16379
   Type: node
   Pass: redis1234
+  key: mqueue-scheduler

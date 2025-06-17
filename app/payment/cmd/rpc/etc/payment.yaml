@@ -2,7 +2,6 @@ Name: payment-rpc
 ListenOn: 0.0.0.0:2002
 Mode: dev
 
-
 #监控
 Prometheus:
   Host: 0.0.0.0
@@ -25,8 +24,10 @@ Redis:
   Type: node
   Pass: password
   key: payment-rpc
+
 DB:
   DataSource: username:password@tcp(192.168.222.8:3306)/looklook_order?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+
 Cache:
   - Host: 192.168.222.33:6379
     Pass: password
@@ -38,8 +39,3 @@ KqPaymentUpdatePayStatusConf:
     - 192.168.222.40:9092
     - 192.168.222.11:9092
   Topic: payment-update-paystatus-topic
-
-
-
-
-
