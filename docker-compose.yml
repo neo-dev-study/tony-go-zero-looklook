@@ -13,7 +13,7 @@ services:
     ports:
       - 8888:8081
     volumes:
-      - ./deploy/development/nginx/conf.d:/etc/nginx/conf.d
+      - ../deploy/development/nginx/conf.d:/etc/nginx/conf.d
       - ./data/nginx/log:/var/log/nginx
     networks:
       - looklook_net
@@ -37,7 +37,7 @@ services:
     working_dir: /go/looklook
     volumes:
       - .:/go/looklook
-      - ./modd/modd.local.conf:/go/looklook/modd.conf
+      - ./modd/modd.dev.conf:/go/looklook/modd.conf
     networks:
       - looklook_net
 

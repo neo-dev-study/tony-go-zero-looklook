@@ -27,7 +27,7 @@ lint: # Run go linter | 运行代码错误分析
 
 .PHONY: Docker_Mac_Env
 Docker_Mac_Env:
-	docker-compose -f ./docker/docker-compose-env-mac.yml up -d
+	docker-compose -f docker-compose-env-mac.yml -p tony-go-zero-looklook  up -d
 
 .PHONY: Docker_Mac_Start
 Docker_Mac_Start:
