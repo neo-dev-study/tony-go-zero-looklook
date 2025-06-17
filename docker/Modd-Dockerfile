@@ -1,0 +1,17 @@
+FROM golang:1.24
+
+ENV GOPROXY=https://goproxy.cn,direct
+ENV TZ=Asia/Shanghai
+
+# 使用 Debian 的包管理器 apt 而不是 apk
+RUN apt-get update && apt-get install -y tzdata
+
+# 设置时区（避免交互）
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# 安装 modd 工具
+RUN go install github.com/cortesi/modd/cmd/modd@latest
+
+WORKDIR /go
+
+CMD ["modd"]

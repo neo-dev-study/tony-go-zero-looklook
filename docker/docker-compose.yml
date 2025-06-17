@@ -23,8 +23,13 @@ services:
   #前端api + 业务rpc - Front-end API + business RPC
   looklook:
     # image: lyumikael/gomodd:v1.0.0 # if you "macOs intel" or "linux amd"
-    image: lyumikael/go-modd-env:v1.0.0 # if you macOs m1
+    # image: lyumikael/go-modd-env:v1.0.0 # if you macOs m1
+    build:
+      context: . # 指向 Dockerfile 所在目录（当前目录）
+      dockerfile: Modd-Dockerfile # 可省略，默认就是这个文件名
     container_name: looklook
+    restart: always
+    privileged: true
     environment:
       # 时区上海 - Timezone Shanghai
       TZ: Asia/Shanghai
@@ -32,8 +37,7 @@ services:
     working_dir: /go/looklook
     volumes:
       - .:/go/looklook
-    privileged: true
-    restart: always
+      - ./modd/modd.local.conf:/go/looklook/modd.conf
     networks:
       - looklook_net
 
@@ -41,6 +45,6 @@ networks:
   looklook_net:
     external: true
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
+    # ipam:
+    #   config:
+    #     - subnet: 172.20.0.0/16
