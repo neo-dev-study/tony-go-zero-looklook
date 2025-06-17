@@ -1,22 +1,20 @@
 /*
  Navicat MySQL Data Transfer
-
+ 
  Source Server         : looklook
  Source Server Type    : MySQL
  Source Server Version : 80028
  Source Host           : 127.0.0.1:33069
  Source Schema         : looklook_travel
-
+ 
  Target Server Type    : MySQL
  Target Server Version : 80028
  File Encoding         : 65001
-
+ 
  Date: 10/03/2022 17:14:28
-*/
-
+ */
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 -- Table structure for homestay
 -- ----------------------------
@@ -42,8 +40,7 @@ CREATE TABLE `homestay` (
   `homestay_price` bigint NOT NULL DEFAULT '0' COMMENT '民宿价格（分）',
   `market_homestay_price` bigint NOT NULL DEFAULT '0' COMMENT '民宿市场价格（分）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='每一间民宿';
-
+) ENGINE = InnoDB AUTO_INCREMENT = 11 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '每一间民宿';
 -- ----------------------------
 -- Table structure for homestay_activity
 -- ----------------------------
@@ -59,9 +56,8 @@ CREATE TABLE `homestay_activity` (
   `row_status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:下架 1:上架',
   `version` bigint NOT NULL DEFAULT '0' COMMENT '版本号',
   PRIMARY KEY (`id`),
-  KEY `idx_rowType` (`row_type`,`row_status`,`del_state`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='每一间民宿';
-
+  KEY `idx_rowType` (`row_type`, `row_status`, `del_state`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 11 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '每一间民宿';
 -- ----------------------------
 -- Table structure for homestay_business
 -- ----------------------------
@@ -79,15 +75,14 @@ CREATE TABLE `homestay_business` (
   `license_fron` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '营业执照正面',
   `license_back` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '营业执照背面',
   `row_state` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:禁止营业 1:正常营业',
-  `star` double(2,1) NOT NULL DEFAULT '0.0' COMMENT '店铺整体评价，冗余',
+  `star` double(2, 1) NOT NULL DEFAULT '0.0' COMMENT '店铺整体评价，冗余',
   `tags` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '每个店家一个标签，自己编辑',
   `cover` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '封面图',
   `header_img` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '店招门头图片',
   `version` bigint NOT NULL DEFAULT '0' COMMENT '版本号',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_userId` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='民宿店铺';
-
+) ENGINE = InnoDB AUTO_INCREMENT = 4 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '民宿店铺';
 -- ----------------------------
 -- Table structure for homestay_comment
 -- ----------------------------
@@ -104,6 +99,5 @@ CREATE TABLE `homestay_comment` (
   `star` json NOT NULL COMMENT '星星数,多个维度',
   `version` bigint NOT NULL DEFAULT '0' COMMENT '版本号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='民宿评价';
-
+) ENGINE = InnoDB AUTO_INCREMENT = 2 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '民宿评价';
 SET FOREIGN_KEY_CHECKS = 1;

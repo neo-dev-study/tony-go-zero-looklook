@@ -1,22 +1,20 @@
 /*
  Navicat MySQL Data Transfer
-
+ 
  Source Server         : looklook
  Source Server Type    : MySQL
  Source Server Version : 80028
  Source Host           : 127.0.0.1:33069
  Source Schema         : looklook_usercenter
-
+ 
  Target Server Type    : MySQL
  Target Server Version : 80028
  File Encoding         : 65001
-
+ 
  Date: 10/03/2022 17:14:49
-*/
-
+ */
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 -- Table structure for user
 -- ----------------------------
@@ -36,8 +34,7 @@ CREATE TABLE `user` (
   `info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_mobile` (`mobile`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='用户表';
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表';
 -- ----------------------------
 -- Table structure for user_auth
 -- ----------------------------
@@ -53,8 +50,7 @@ CREATE TABLE `user_auth` (
   `auth_key` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '平台唯一id',
   `auth_type` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '平台类型',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_type_key` (`auth_type`,`auth_key`) USING BTREE,
-  UNIQUE KEY `idx_userId_key` (`user_id`,`auth_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='用户授权表';
-
+  UNIQUE KEY `idx_type_key` (`auth_type`, `auth_key`) USING BTREE,
+  UNIQUE KEY `idx_userId_key` (`user_id`, `auth_type`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户授权表';
 SET FOREIGN_KEY_CHECKS = 1;

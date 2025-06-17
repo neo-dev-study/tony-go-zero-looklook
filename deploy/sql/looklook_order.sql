@@ -1,22 +1,20 @@
 /*
  Navicat MySQL Data Transfer
-
+ 
  Source Server         : looklook
  Source Server Type    : MySQL
  Source Server Version : 80028
  Source Host           : 127.0.0.1:33069
  Source Schema         : looklook_order
-
+ 
  Target Server Type    : MySQL
  Target Server Version : 80028
  File Encoding         : 65001
-
+ 
  Date: 10/03/2022 17:15:38
-*/
-
+ */
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 -- Table structure for homestay_order
 -- ----------------------------
@@ -55,6 +53,5 @@ CREATE TABLE `homestay_order` (
   `homestay_total_price` bigint NOT NULL DEFAULT '0' COMMENT '民宿总价格(分)',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_sn` (`sn`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='每一间民宿';
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '每一间民宿';
 SET FOREIGN_KEY_CHECKS = 1;

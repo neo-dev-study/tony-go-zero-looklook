@@ -1,22 +1,20 @@
 /*
  Navicat MySQL Data Transfer
-
+ 
  Source Server         : looklook
  Source Server Type    : MySQL
  Source Server Version : 80028
  Source Host           : 127.0.0.1:33069
  Source Schema         : looklook_payment
-
+ 
  Target Server Type    : MySQL
  Target Server Version : 80028
  File Encoding         : 65001
-
+ 
  Date: 10/03/2022 17:14:12
-*/
-
+ */
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 -- Table structure for third_payment
 -- ----------------------------
@@ -42,6 +40,5 @@ CREATE TABLE `third_payment` (
   `pay_time` datetime NOT NULL DEFAULT '1970-01-01 08:00:00' COMMENT '支付成功时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_sn` (`sn`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='第三方支付流水记录';
-
+) ENGINE = InnoDB AUTO_INCREMENT = 42 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '第三方支付流水记录';
 SET FOREIGN_KEY_CHECKS = 1;
