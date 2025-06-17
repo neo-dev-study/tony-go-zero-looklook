@@ -22,7 +22,7 @@ Telemetry:
 Redis:
   Host: redis:6379
   Type: node
-  Pass: password
+  Pass: redis1234
   key: order-rpc
 
 DB:
@@ -30,7 +30,7 @@ DB:
 
 Cache:
   - Host: redis:6379
-    Pass: password
+    Pass: redis1234
 
 #rpc
 TravelRpcConf:

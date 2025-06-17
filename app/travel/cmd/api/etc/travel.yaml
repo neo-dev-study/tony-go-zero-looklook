@@ -25,7 +25,7 @@ DB:
 
 Cache:
   - Host: 192.168.222.33:6379
-    Pass: password
+    Pass: redis1234
 
 #rpc
 TravelRpcConf:

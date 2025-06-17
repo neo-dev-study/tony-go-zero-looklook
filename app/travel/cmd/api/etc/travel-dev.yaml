@@ -25,7 +25,7 @@ DB:
 
 Cache:
   - Host: redis:6379
-    Pass: password
+    Pass: redis1234
 
 #rpc
 UsercenterRpcConf:

@@ -23,7 +23,7 @@ Log:
 Redis:
   Host: 192.168.222.33:6379
   Type: node
-  Pass: password
+  Pass: redis1234
   key: order-mq
 
 #kq

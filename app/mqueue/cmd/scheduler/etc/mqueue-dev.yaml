@@ -23,5 +23,5 @@ Log:
 Redis:
   Host: redis:6379
   Type: node
-  Pass: password
+  Pass: redis1234
   key: mqueue-scheduler

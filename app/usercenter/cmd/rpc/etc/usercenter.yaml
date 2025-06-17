@@ -27,7 +27,7 @@ Log:
 Redis:
   Host: 192.168.222.33:6379
   Type: node
-  Pass: password
+  Pass: redis1234
   key: usercenter-rpc
 
 DB:
@@ -35,4 +35,4 @@ DB:
 
 Cache:
   - Host: 192.168.222.33:6379
-    Pass: password
+    Pass: redis1234

@@ -25,8 +25,8 @@ services:
     # image: lyumikael/gomodd:v1.0.0 # if you "macOs intel" or "linux amd"
     # image: lyumikael/go-modd-env:v1.0.0 # if you macOs m1
     build:
-      context: . # 指向 Dockerfile 所在目录（当前目录）
-      dockerfile: Modd-Dockerfile # 可省略，默认就是这个文件名
+      context: ./modd/ # 指向 Dockerfile 所在目录（当前目录）
+      dockerfile: Alpine-Dockerfile # 可省略，默认就是这个文件名
     container_name: looklook
     restart: always
     privileged: true
