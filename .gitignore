@@ -13,8 +13,6 @@ data/*
 # gitlab ci
 .cache
 
-#vscode
-.vscode
-.vscode/
-
-
+# #vscode
+# .vscode
+# .vscode/
