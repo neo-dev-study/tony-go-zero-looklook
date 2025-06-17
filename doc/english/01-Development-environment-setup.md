@@ -151,7 +151,7 @@ For local tools to connect to mysql, you need to enter the container first and s
 
 ```shell
 $ docker exec -it mysql mysql -uroot -p
-#input password:PXDN93VRKUm8TeE7
+#input password:mysql1234
 $ use mysql;
 $ update user set host='%' where user='root';
 $ FLUSH PRIVILEGES;
@@ -194,7 +194,7 @@ Mysql : Self-client tools (Navicat, Sequel Pro) to view
 
 - username : root
 
-- pwd : PXDN93VRKUm8TeE7
+- pwd : mysql1234
 
 Redis : View by tool (redisManager)
 
