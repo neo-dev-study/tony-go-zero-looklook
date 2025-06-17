@@ -5,14 +5,12 @@ import (
 	"flag"
 	"os"
 
-	"looklook/app/mqueue/cmd/job/internal/logic"
-	"looklook/app/mqueue/cmd/job/internal/svc"
-
+	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logx"
 
 	"looklook/app/mqueue/cmd/job/internal/config"
-
-	"github.com/zeromicro/go-zero/core/conf"
+	"looklook/app/mqueue/cmd/job/internal/logic"
+	"looklook/app/mqueue/cmd/job/internal/svc"
 )
 
 var configFile = flag.String("f", "etc/mqueue.yaml", "Specify the config file")

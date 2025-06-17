@@ -6,10 +6,10 @@ package order
 import (
 	"context"
 
-	"looklook/app/order/cmd/rpc/pb"
-
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
+
+	"looklook/app/order/cmd/rpc/pb"
 )
 
 type (

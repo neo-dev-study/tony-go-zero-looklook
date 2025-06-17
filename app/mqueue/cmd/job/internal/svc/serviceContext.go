@@ -1,13 +1,13 @@
 package svc
 
 import (
-	"looklook/app/mqueue/cmd/job/internal/config"
-	"looklook/app/order/cmd/rpc/order"
-	"looklook/app/usercenter/cmd/rpc/usercenter"
-
 	"github.com/hibiken/asynq"
 	"github.com/silenceper/wechat/v2/miniprogram"
 	"github.com/zeromicro/go-zero/zrpc"
+
+	"looklook/app/mqueue/cmd/job/internal/config"
+	"looklook/app/order/cmd/rpc/order"
+	"looklook/app/usercenter/cmd/rpc/usercenter"
 )
 
 type ServiceContext struct {

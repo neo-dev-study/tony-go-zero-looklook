@@ -3,14 +3,14 @@ package user
 import (
 	"context"
 
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
+
 	"looklook/app/usercenter/cmd/api/internal/svc"
 	"looklook/app/usercenter/cmd/api/internal/types"
 	"looklook/app/usercenter/cmd/rpc/usercenter"
 	"looklook/app/usercenter/model"
-
-	"github.com/jinzhu/copier"
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type RegisterLogic struct {

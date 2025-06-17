@@ -4,17 +4,17 @@ import (
 	"flag"
 	"fmt"
 
-	"looklook/app/payment/cmd/rpc/internal/config"
-	"looklook/app/payment/cmd/rpc/internal/server"
-	"looklook/app/payment/cmd/rpc/internal/svc"
-	"looklook/app/payment/cmd/rpc/pb"
-	"looklook/common/interceptor/rpcserver"
-
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+
+	"looklook/app/payment/cmd/rpc/internal/config"
+	"looklook/app/payment/cmd/rpc/internal/server"
+	"looklook/app/payment/cmd/rpc/internal/svc"
+	"looklook/app/payment/cmd/rpc/pb"
+	"looklook/common/interceptor/rpcserver"
 )
 
 var configFile = flag.String("f", "etc/payment.yaml", "the config file")

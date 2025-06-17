@@ -4,12 +4,12 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/rest"
+
 	"looklook/app/usercenter/cmd/api/internal/config"
 	"looklook/app/usercenter/cmd/api/internal/handler"
 	"looklook/app/usercenter/cmd/api/internal/svc"
-
-	"github.com/zeromicro/go-zero/core/conf"
-	"github.com/zeromicro/go-zero/rest"
 )
 
 var configFile = flag.String("f", "etc/usercenter.yaml", "the config file")

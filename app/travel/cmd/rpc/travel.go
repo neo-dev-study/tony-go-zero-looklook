@@ -4,17 +4,17 @@ import (
 	"flag"
 	"fmt"
 
-	"looklook/app/travel/cmd/rpc/internal/config"
-	"looklook/app/travel/cmd/rpc/internal/server"
-	"looklook/app/travel/cmd/rpc/internal/svc"
-	"looklook/app/travel/cmd/rpc/pb"
-	"looklook/common/interceptor/rpcserver"
-
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+
+	"looklook/app/travel/cmd/rpc/internal/config"
+	"looklook/app/travel/cmd/rpc/internal/server"
+	"looklook/app/travel/cmd/rpc/internal/svc"
+	"looklook/app/travel/cmd/rpc/pb"
+	"looklook/common/interceptor/rpcserver"
 )
 
 var configFile = flag.String("f", "etc/travel.yaml", "the config file")

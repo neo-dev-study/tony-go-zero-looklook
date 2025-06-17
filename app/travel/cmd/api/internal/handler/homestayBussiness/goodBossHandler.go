@@ -3,12 +3,12 @@ package homestayBussiness
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
+
 	"looklook/app/travel/cmd/api/internal/logic/homestayBussiness"
 	"looklook/app/travel/cmd/api/internal/svc"
 	"looklook/app/travel/cmd/api/internal/types"
 	"looklook/common/result"
-
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func GoodBossHandler(ctx *svc.ServiceContext) http.HandlerFunc {

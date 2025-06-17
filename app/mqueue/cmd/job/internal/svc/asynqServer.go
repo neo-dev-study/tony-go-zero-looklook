@@ -3,9 +3,9 @@ package svc
 import (
 	"fmt"
 
-	"looklook/app/mqueue/cmd/job/internal/config"
-
 	"github.com/hibiken/asynq"
+
+	"looklook/app/mqueue/cmd/job/internal/config"
 )
 
 func newAsynqServer(c config.Config) *asynq.Server {

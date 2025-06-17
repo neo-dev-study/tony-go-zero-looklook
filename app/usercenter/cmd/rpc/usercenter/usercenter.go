@@ -6,10 +6,10 @@ package usercenter
 import (
 	"context"
 
-	"looklook/app/usercenter/cmd/rpc/pb"
-
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
+
+	"looklook/app/usercenter/cmd/rpc/pb"
 )
 
 type (

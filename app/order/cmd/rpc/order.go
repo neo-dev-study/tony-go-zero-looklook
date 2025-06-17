@@ -4,17 +4,17 @@ import (
 	"flag"
 	"fmt"
 
-	"looklook/app/order/cmd/rpc/internal/config"
-	"looklook/app/order/cmd/rpc/internal/server"
-	"looklook/app/order/cmd/rpc/internal/svc"
-	"looklook/app/order/cmd/rpc/pb"
-	"looklook/common/interceptor/rpcserver"
-
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+
+	"looklook/app/order/cmd/rpc/internal/config"
+	"looklook/app/order/cmd/rpc/internal/server"
+	"looklook/app/order/cmd/rpc/internal/svc"
+	"looklook/app/order/cmd/rpc/pb"
+	"looklook/common/interceptor/rpcserver"
 )
 
 var configFile = flag.String("f", "etc/order.yaml", "the config file")

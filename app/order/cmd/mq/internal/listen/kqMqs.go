@@ -3,12 +3,12 @@ package listen
 import (
 	"context"
 
+	"github.com/zeromicro/go-queue/kq"
+	"github.com/zeromicro/go-zero/core/service"
+
 	"looklook/app/order/cmd/mq/internal/config"
 	kqMq "looklook/app/order/cmd/mq/internal/mqs/kq"
 	"looklook/app/order/cmd/mq/internal/svc"
-
-	"github.com/zeromicro/go-queue/kq"
-	"github.com/zeromicro/go-zero/core/service"
 )
 
 // pub sub use kq (kafka)

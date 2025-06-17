@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"looklook/app/mqueue/cmd/scheduler/internal/config"
-
 	"github.com/hibiken/asynq"
 	"github.com/zeromicro/go-zero/core/logx"
+
+	"looklook/app/mqueue/cmd/scheduler/internal/config"
 )
 
 // create scheduler

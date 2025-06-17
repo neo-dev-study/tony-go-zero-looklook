@@ -3,6 +3,11 @@ package thirdPayment
 import (
 	"context"
 
+	"github.com/pkg/errors"
+	"github.com/wechatpay-apiv3/wechatpay-go/core"
+	"github.com/wechatpay-apiv3/wechatpay-go/services/payments/jsapi"
+	"github.com/zeromicro/go-zero/core/logx"
+
 	"looklook/app/order/cmd/rpc/order"
 	"looklook/app/payment/cmd/api/internal/svc"
 	"looklook/app/payment/cmd/api/internal/types"
@@ -12,11 +17,6 @@ import (
 	usercenterModel "looklook/app/usercenter/model"
 	"looklook/common/ctxdata"
 	"looklook/common/xerr"
-
-	"github.com/pkg/errors"
-	"github.com/wechatpay-apiv3/wechatpay-go/core"
-	"github.com/wechatpay-apiv3/wechatpay-go/services/payments/jsapi"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 var ErrWxPayError = xerr.NewErrMsg("wechat pay fail")

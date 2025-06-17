@@ -4,14 +4,14 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/hibiken/asynq"
+	"github.com/pkg/errors"
+
 	"looklook/app/mqueue/cmd/job/internal/svc"
 	"looklook/app/mqueue/cmd/job/jobtype"
 	"looklook/app/order/cmd/rpc/order"
 	"looklook/app/order/model"
 	"looklook/common/xerr"
-
-	"github.com/hibiken/asynq"
-	"github.com/pkg/errors"
 )
 
 var ErrCloseOrderFal = xerr.NewErrMsg("close order fail")

@@ -1,11 +1,11 @@
 package svc
 
 import (
+	"github.com/zeromicro/go-zero/zrpc"
+
 	"looklook/app/order/cmd/mq/internal/config"
 	"looklook/app/order/cmd/rpc/order"
 	"looklook/app/usercenter/cmd/rpc/usercenter"
-
-	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {

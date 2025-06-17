@@ -1,10 +1,10 @@
 package svc
 
 import (
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+
 	"looklook/app/travel/cmd/rpc/internal/config"
 	"looklook/app/travel/model"
-
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type ServiceContext struct {

@@ -4,17 +4,15 @@ import (
 	"context"
 	"encoding/json"
 
-	"looklook/app/mqueue/cmd/job/jobtype"
-
 	"github.com/hibiken/asynq"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
 
+	"looklook/app/mqueue/cmd/job/jobtype"
 	"looklook/app/order/cmd/rpc/internal/svc"
 	"looklook/app/order/cmd/rpc/pb"
 	"looklook/app/order/model"
 	"looklook/common/xerr"
-
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type UpdateHomestayOrderTradeStateLogic struct {

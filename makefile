@@ -1,6 +1,7 @@
 
 GO ?= go
-GOFMT ?= gofumpt "-s"
+# GOFMT ?= gofumpt "-s"
+GOFMT ?= gofumpt
 GOIMPORTS := goimports
 
 # gofumpt 安装路径
@@ -18,6 +19,7 @@ install-tools: # Install the necessary tools | 安装必要的工具
 	@echo "==> 安装 golangci-lint,goimports,gofumpt,swagger,modd 等工具"
 	$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@latest;
 	$(GO) install golang.org/x/tools/cmd/goimports@latest
+	$(GO) install github.com/incu6us/goimports-reviser/v3@latest
 	$(GO) install mvdan.cc/gofumpt@latest;
 	$(GO) install github.com/go-swagger/go-swagger/cmd/swagger@latest;
 	$(GO) install github.com/cortesi/modd/cmd/modd@latest
@@ -27,9 +29,10 @@ install-tools: # Install the necessary tools | 安装必要的工具
 
 fmt: # Format the codes | 格式化代码
 	@echo "==> 使用 goimports 自动整理 imports..."
-	$(GOIMPORTS) -w .
+	$(GOIMPORTS) -w $(GOFILES)
 	@echo "==> 使用 gofumpt 格式化代码..."
 	$(GOFMT) -w $(GOFILES)
+	goimports-reviser -rm-unused -format -recursive $(GOFILES)
 
 # 使用 gofumpt 检查代码是否已格式化（CI 场景使用）
 check-fmt:

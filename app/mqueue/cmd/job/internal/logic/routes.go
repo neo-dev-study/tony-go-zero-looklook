@@ -3,10 +3,10 @@ package logic
 import (
 	"context"
 
+	"github.com/hibiken/asynq"
+
 	"looklook/app/mqueue/cmd/job/internal/svc"
 	"looklook/app/mqueue/cmd/job/jobtype"
-
-	"github.com/hibiken/asynq"
 )
 
 type CronJob struct {

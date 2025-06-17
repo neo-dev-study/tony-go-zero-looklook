@@ -4,7 +4,10 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
+	"github.com/zeromicro/go-zero/zrpc"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
 	"looklook/app/usercenter/cmd/rpc/internal/config"
@@ -12,10 +15,6 @@ import (
 	"looklook/app/usercenter/cmd/rpc/internal/svc"
 	"looklook/app/usercenter/cmd/rpc/pb"
 	"looklook/common/interceptor/rpcserver"
-
-	"github.com/zeromicro/go-zero/core/conf"
-	"github.com/zeromicro/go-zero/zrpc"
-	"google.golang.org/grpc"
 )
 
 var configFile = flag.String("f", "etc/usercenter.yaml", "the config file")

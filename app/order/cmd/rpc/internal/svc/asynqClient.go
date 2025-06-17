@@ -1,9 +1,9 @@
 package svc
 
 import (
-	"looklook/app/order/cmd/rpc/internal/config"
-
 	"github.com/hibiken/asynq"
+
+	"looklook/app/order/cmd/rpc/internal/config"
 )
 
 // create asynq client.

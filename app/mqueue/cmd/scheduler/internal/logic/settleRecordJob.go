@@ -3,10 +3,10 @@ package logic
 import (
 	"fmt"
 
-	"looklook/app/mqueue/cmd/job/jobtype"
-
 	"github.com/hibiken/asynq"
 	"github.com/zeromicro/go-zero/core/logx"
+
+	"looklook/app/mqueue/cmd/job/jobtype"
 )
 
 // scheduler job ------> go-zero-looklook/app/mqueue/cmd/job/internal/logic/settleRecord.go.

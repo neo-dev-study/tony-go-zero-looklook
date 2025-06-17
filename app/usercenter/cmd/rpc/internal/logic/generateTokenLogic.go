@@ -4,16 +4,13 @@ import (
 	"context"
 	"time"
 
-	"looklook/common/ctxdata"
-
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
 
 	"looklook/app/usercenter/cmd/rpc/internal/svc"
 	"looklook/app/usercenter/cmd/rpc/pb"
-
-	"github.com/golang-jwt/jwt/v4"
-
-	"github.com/zeromicro/go-zero/core/logx"
+	"looklook/common/ctxdata"
 )
 
 type GenerateTokenLogic struct {

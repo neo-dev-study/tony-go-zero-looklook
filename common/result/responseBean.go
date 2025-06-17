@@ -5,6 +5,7 @@ type ResponseSuccessBean struct {
 	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
 }
+
 type NullJson struct{}
 
 func Success(data interface{}) *ResponseSuccessBean {

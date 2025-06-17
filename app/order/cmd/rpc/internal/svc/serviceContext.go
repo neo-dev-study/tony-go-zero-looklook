@@ -1,14 +1,13 @@
 package svc
 
 import (
+	"github.com/hibiken/asynq"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/zrpc"
+
 	"looklook/app/order/cmd/rpc/internal/config"
 	"looklook/app/order/model"
 	"looklook/app/travel/cmd/rpc/travel"
-
-	"github.com/hibiken/asynq"
-
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
-	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {

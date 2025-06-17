@@ -3,13 +3,13 @@ package svc
 import (
 	"context"
 
-	"looklook/app/payment/cmd/api/internal/config"
-	"looklook/common/xerr"
-
 	"github.com/pkg/errors"
 	"github.com/wechatpay-apiv3/wechatpay-go/core"
 	"github.com/wechatpay-apiv3/wechatpay-go/core/option"
 	"github.com/wechatpay-apiv3/wechatpay-go/utils"
+
+	"looklook/app/payment/cmd/api/internal/config"
+	"looklook/common/xerr"
 )
 
 func NewWxPayClientV3(c config.PaymentConfig) (*core.Client, error) {

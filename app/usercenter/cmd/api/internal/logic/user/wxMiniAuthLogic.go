@@ -4,19 +4,18 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/pkg/errors"
+	wechat "github.com/silenceper/wechat/v2"
+	"github.com/silenceper/wechat/v2/cache"
 	"github.com/silenceper/wechat/v2/miniprogram/auth"
+	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
+	"github.com/zeromicro/go-zero/core/logx"
 
 	"looklook/app/usercenter/cmd/api/internal/svc"
 	"looklook/app/usercenter/cmd/api/internal/types"
 	"looklook/app/usercenter/cmd/rpc/usercenter"
 	usercenterModel "looklook/app/usercenter/model"
 	"looklook/common/xerr"
-
-	"github.com/pkg/errors"
-	wechat "github.com/silenceper/wechat/v2"
-	"github.com/silenceper/wechat/v2/cache"
-	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 // ErrWxMiniAuthFailError error
