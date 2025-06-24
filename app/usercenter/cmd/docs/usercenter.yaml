@@ -1,0 +1,171 @@
+basePath: /
+consumes:
+- application/json
+host: 127.0.0.1:28888
+info:
+  title: 用户中心服务
+  version: v1
+paths:
+  /usercenter/v1/user/detail:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      responses:
+        default:
+          description: ""
+          schema:
+            properties:
+              userInfo:
+                properties:
+                  avatar:
+                    type: string
+                  id:
+                    type: integer
+                  info:
+                    type: string
+                  mobile:
+                    type: string
+                  nickname:
+                    type: string
+                  sex:
+                    type: integer
+                required:
+                - id
+                - mobile
+                - nickname
+                - sex
+                - avatar
+                - info
+                type: object
+            type: object
+      schemes:
+      - http
+      summary: get user info
+      tags:
+      - ""
+  /usercenter/v1/user/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          properties:
+            mobile:
+              type: string
+            password:
+              type: string
+          required:
+          - mobile
+          - password
+          type: object
+      produces:
+      - application/json
+      responses:
+        default:
+          description: ""
+          schema:
+            properties:
+              accessExpire:
+                type: integer
+              accessToken:
+                type: string
+              refreshAfter:
+                type: integer
+            type: object
+      schemes:
+      - http
+      summary: login
+      tags:
+      - ""
+  /usercenter/v1/user/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          properties:
+            mobile:
+              type: string
+            password:
+              type: string
+          required:
+          - mobile
+          - password
+          type: object
+      produces:
+      - application/json
+      responses:
+        default:
+          description: ""
+          schema:
+            properties:
+              accessExpire:
+                type: integer
+              accessToken:
+                type: string
+              refreshAfter:
+                type: integer
+            type: object
+      schemes:
+      - http
+      summary: register
+      tags:
+      - ""
+  /usercenter/v1/user/wxMiniAuth:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          properties:
+            code:
+              type: string
+            encryptedData:
+              type: string
+            iv:
+              type: string
+          required:
+          - code
+          - iv
+          - encryptedData
+          type: object
+      produces:
+      - application/json
+      responses:
+        default:
+          description: ""
+          schema:
+            properties:
+              accessExpire:
+                type: integer
+              accessToken:
+                type: string
+              refreshAfter:
+                type: integer
+            type: object
+      schemes:
+      - http
+      summary: wechat mini auth
+      tags:
+      - ""
+produces:
+- application/json
+schemes:
+- http
+swagger: "2.0"
+x-date: "2025-06-19 15:49:44"
+x-description: This is a goctl generated swagger file.
+x-github: https://github.com/zeromicro/go-zero
+x-go-zero-doc: https://go-zero.dev/
+x-goctl-version: 1.8.3
