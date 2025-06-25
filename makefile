@@ -65,7 +65,7 @@ lint-vet:
 
 .PHONY: Docker_Mac_Env
 Docker_Mac_Env:
-	docker-compose -f docker-compose-env-mac.yml -p tony-go-zero-looklook  up -d
+	docker-compose -f docker-compose-env.yml -p tony-go-zero-looklook  up -d
 
 .PHONY: Docker_Mac_Start
 Docker_Mac_Start:
