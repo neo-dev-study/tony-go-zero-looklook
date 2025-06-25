@@ -3,8 +3,6 @@ GOFMT ?= gofumpt "-s"
 GOFILES := $(shell find . -name "*.go")
 LDFLAGS := -s -w
 
-
-.PHONY: tools
 tools: # Install the necessary tools | 安装必要的工具
 	$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@latest;
 	$(GO) install golang.org/x/tools/cmd/goimports@latest
